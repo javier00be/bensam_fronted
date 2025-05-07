@@ -1,0 +1,110 @@
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Bensam Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-white min-h-screen flex items-center justify-center overflow-hidden"
+  >
+    <div class="flex w-full h-screen rounded-none overflow-hidden max-w-none">
+      <!-- Left side: Login form container centered with max width -->
+      <div
+        class="flex flex-col justify-center px-10 py-12 w-full md:w-1/2 max-w-lg mx-auto h-full"
+      >
+        <div class="flex items-center space-x-2 mb-10">
+          <img
+            alt="Logo icon of a suit jacket line drawing"
+            class="w-8 h-8"
+            height="32"
+            src="https://storage.googleapis.com/a1aa/image/32e9256a-73da-49f0-96b7-6621ed0f35a5.jpg"
+            width="32"
+          />
+          <span class="text-gray-900 text-xl font-light select-none">
+            Bensam
+          </span>
+        </div>
+        <h1 class="text-black text-2xl font-semibold mb-1">BIENVENIDO/A</h1>
+        <p class="text-gray-400 text-sm mb-8">
+          Inicia sesión completando tus datos
+        </p>
+        <form action="#" class="w-full" method="POST" novalidate="">
+          <label
+            class="block text-black text-sm font-semibold mb-1"
+            for="email"
+          >
+            Correo Electrónico
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded px-3 py-2 mb-6 text-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            id="email"
+            name="email"
+            required=""
+            type="email"
+          />
+          <label
+            class="block text-black text-sm font-semibold mb-1"
+            for="password"
+          >
+            Contraseña
+          </label>
+          <input
+            class="w-full border border-gray-300 rounded px-3 py-2 mb-1 text-black text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            id="password"
+            name="password"
+            required=""
+            type="password"
+          />
+          <div class="text-xs text-right mb-6 text-black">
+            <a class="hover:underline" href="#"> Olvide mi contraseña </a>
+          </div>
+          <button
+            class="w-full bg-black text-white font-semibold text-sm py-3 rounded mb-6 hover:bg-gray-900 transition-colors"
+            type="submit"
+          >
+            Ingresar
+          </button>
+        </form>
+        <p class="text-xs text-center text-black">
+          ¿No tienes una cuenta?
+          <a class="underline" href="#"> Regístrate </a>
+        </p>
+      </div>
+      <!-- Right side: Image with text overlay, hidden on small screens -->
+      <div
+        class="hidden md:block relative w-1/2 h-full max-h-screen rounded-none overflow-hidden p-4 box-border"
+      >
+        <img
+          alt="Close-up image of soft beige fabric with smooth folds and texture"
+          class="w-full h-full object-cover rounded-lg"
+          height="1080"
+          src="assets/images/portada.jpg"
+          width="1080"
+        />
+
+        <div
+          class="absolute bottom-8 left-8 right-8 text-white font-semibold text-xl leading-tight drop-shadow-lg max-w-[90%]"
+        >
+          <p>
+            <span class="font-bold block text-2xl mb-1">
+              Descubre la suavidad de nuestras telas
+            </span>
+            <span class="font-normal text-lg">
+              perfectas para cualquier ocasión
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
