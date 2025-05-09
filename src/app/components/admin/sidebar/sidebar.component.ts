@@ -4,11 +4,9 @@ import { AlmacenComponent } from '../pages/almacen/almacen.component';
 
 @Component({
   selector: 'app-sidebar',
-  standalone:true,
+  standalone: true,
   imports: [RouterLink, AlmacenComponent],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
 })
-export class SidebarComponent {
-
-}
+export class SidebarComponent {}
