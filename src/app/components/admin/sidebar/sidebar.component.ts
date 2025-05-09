@@ -6,6 +6,7 @@ import { AlmacenComponent } from '../pages/almacen/almacen.component';
   selector: 'app-sidebar',
   standalone: true,
   imports: [RouterLink, AlmacenComponent],
+  
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
