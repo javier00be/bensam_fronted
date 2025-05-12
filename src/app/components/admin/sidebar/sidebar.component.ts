@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
-import { AlmacenComponent } from '../pages/almacen/almacen.component';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, AlmacenComponent],
-  
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  // Definir navItems correctamente
+  navItems = [
+    { name: 'Dashboard', icon: 'fa-th-large', route: '/admin/home/' },
+    { name: 'Almacen', icon: 'fa-book-open', route: '/admin/almacen' },
+    { name: 'Producto', icon: 'fa-shield-alt', route: '/admin/producto' },
+    { name: 'Material', icon: 'fa-chart-line', route: '/admin/material' },
+  ];
+}

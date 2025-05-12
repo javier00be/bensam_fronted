@@ -2,12 +2,53 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { SidebarComponent } from './components/admin/sidebar/sidebar.component';
-// Importa tus otros componentes según sea necesario
+import { HomeComponent } from './components/admin/pages/home/home.component';
+import { AlmacenComponent } from './components/admin/pages/almacen/almacen.component';
+import { ProductoComponent } from './components/admin/pages/producto/producto.component';
+import { MaterialComponent } from './components/admin/pages/material/material.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirige la ruta raíz a login si lo deseas
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'sidebar', component: SidebarComponent },
-  // Agrega tus otras rutas aquí
+  {
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('../app/components/admin/pages/home/home.component').then(
+            (m) => m.HomeComponent
+          ),
+      },
+      {
+        path: 'almacen',
+        loadComponent: () =>
+          import(
+            '../app/components/admin/pages/almacen/almacen.component'
+          ).then((m) => m.AlmacenComponent),
+      },
+      {
+        path: 'producto',
+        loadComponent: () =>
+          import(
+            '../app/components/admin/pages/producto/producto.component'
+          ).then((m) => m.ProductoComponent),
+      },
+      {
+        path: 'material',
+        loadComponent: () =>
+          import(
+            '../app/components/admin/pages/material/material.component'
+          ).then((m) => m.MaterialComponent),
+      },
+      {
+        path: '',
+        redirectTo: 'Dashboard',
+        pathMatch: 'full',
+      },
+    ],
+  },
 ];

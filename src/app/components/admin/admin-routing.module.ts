@@ -1,16 +1,32 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AlmacenComponent } from './pages/almacen/almacen.component';  // Componente de Almacen
-import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
-  { path: 'almacen', component: AlmacenComponent },  // Ruta para el componente Almacen
-  { path: 'home', component: HomeComponent },    // Ruta para el componente Kanban
-  { path: '', redirectTo: '/almacen', pathMatch: 'full' } // Ruta por defecto (redirige a Almacen)
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('../admin/pages/home/home.component').then(m => m.HomeComponent)
+  },
+  {
+    path: 'almacen',
+    loadComponent: () => import('../admin/pages/almacen/almacen.component').then(m => m.AlmacenComponent)
+  },
+  {
+    path: 'producto',
+    loadComponent: () => import('../admin/pages/producto/producto.component').then(m => m.ProductoComponent)
+  },
+  {
+    path: 'material',
+    loadComponent: () => import('../admin/pages/material/material.component').then(m => m.MaterialComponent)
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],  // Usa forChild si es un módulo hijo
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class AdminRoutingModule { }

@@ -1,0 +1,23 @@
+<aside class="w-56 min-h-screen flex flex-col items-start p-6 space-y-10">
+  <div class="flex items-center space-x-3">
+    <img
+      alt="Logo"
+      class="w-30 h-8"
+      src="assets/images/logo.png"
+    />
+  </div>
+  <nav class="flex flex-col space-y-6 w-full">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.route"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [class]="rla.isActive ?
+        'flex items-center space-x-3 bg-black text-white rounded-md px-5 py-3 text-sm font-normal' :
+        'flex items-center space-x-3 text-gray-400 text-sm font-normal hover:text-black transition-colors rounded-md px-5 py-3'"
+    >
+      <i class="fas {{item.icon}} text-lg"></i>
+      <span>{{item.name}}</span>
+    </a>
+  </nav>
+</aside>
