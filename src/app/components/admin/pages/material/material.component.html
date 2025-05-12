@@ -1,1 +1,87 @@
-<p>material works!</p>
+<html lang="es">
+  <body class="bg-[#EDEDED] rounded-lg p-8 min-h">
+    <h1
+      class="font- text-xl mb-6 border-b-2 border-[#0B3B5F] inline-block pb-1"
+    >
+      Material
+    </h1>
+    <form class="flex flex-wrap gap-x-12 gap-y-2">
+      <!-- Insertar Modelos -->
+      <div class="flex flex-col w-96">
+        <label
+          class="flex items-center justify-between text-s mb-2 font-normal text-[#000000]"
+        >
+          <span>Inserte los modelos</span>
+          <button
+            type="button"
+            aria-label="Agregar modelo"
+            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-s leading-none select-none text-white"
+            (click)="openModal('model')"
+          >
+            Añadir
+          </button>
+        </label>
+      </div>
+      <!-- Cuadros blancos debajo -->
+      <div class="flex  space-x-4 w-full">
+        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+      </div>
+
+      <!-- Insertar Diseño -->
+      <div class="flex flex-col w-96">
+        <label
+          class="flex items-center justify-between text-s mb-2 font-normal text-[#000000]"
+        >
+          <span>Insertar Diseño</span>
+          <button
+            type="button"
+            aria-label="Agregar diseño"
+            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-white text-s leading-none select-none"
+            (click)="openModal('design')"
+          >
+            Añadir
+          </button>
+        </label>
+      </div>
+
+      <!-- Cuadros blancos debajo -->
+      <div class="flex  space-x-4 w-full">
+        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+      </div>
+
+      <!-- Insertar Tela -->
+      <div class="flex flex-col w-96">
+        <label
+          class="flex items-center justify-between text-s mb-2 font-normal text-[#000000]"
+        >
+          <span>Insertar Tela</span>
+          <button
+            type="button"
+            aria-label="Agregar tela"
+            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-white text-s leading-none select-none"
+            (click)="openModal('fabric')"
+          >
+            Añadir
+          </button>
+        </label>
+      </div>
+
+      <!-- Cuadros blancos debajo -->
+      <div class="flex  space-x-4 w-full">
+        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+      </div>
+
+    </form>
+
+    <!-- Un solo componente modal que cambia según el tipo -->
+    <app-modal
+      [isVisible]="showModal"
+      [modalType]="currentModalType"
+      (closeModalEvent)="closeModal()"
+      (saveContentEvent)="handleSavedContent($event)"
+    ></app-modal>
+  </body>
+</html>
