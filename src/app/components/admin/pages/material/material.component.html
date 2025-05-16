@@ -6,82 +6,197 @@
       Material
     </h1>
     <form class="flex flex-wrap gap-x-12 gap-y-2">
-      <!-- Insertar Modelos -->
-      <div class="flex flex-col w-96">
-        <label
-          class="flex items-center justify-between text-s mb-2 font-normal text-[#000000]"
-        >
-          <span>Inserte los modelos</span>
+      <!-- Sección: Modelos -->
+      <div class="w-full mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-normal text-[#000000]"
+            >Inserte los modelos</span
+          >
           <button
             type="button"
             aria-label="Agregar modelo"
-            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-s leading-none select-none text-white"
+            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-sm text-white"
             (click)="openModal('model')"
           >
             Añadir
           </button>
-        </label>
-      </div>
-      <!-- Cuadros blancos debajo -->
-      <div class="flex  space-x-4 w-full">
-        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
-        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
+        </div>
+
+         <div class="w-full overflow-x-auto">
+          <div style="max-height: 215px; overflow-y: auto;">
+            <table class="min-w-full bg-white border border-gray-300 text-sm">
+              <thead class="bg-gray-100 text-left sticky top-0">
+                <tr>
+                  <th class="px-4 py-2 border">Modelo</th>
+                  <th class="px-4 py-2 border">Fecha de creación</th>
+                  <th class="px-4 py-2 border text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let model of models">
+                  <td class="px-4 py-2 border">{{ model.nombre }}</td>
+                  <td class="px-4 py-2 border">
+                    {{ model.createdAt | date : "short" }}
+                  </td>
+                  <td class="px-4 py-2 border">
+                    <div class="flex justify-center space-x-2">
+                      <button
+                        type="button"
+                        class="px-2 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600"
+                        (click)="editItem('model', model)"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        class="px-2 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600"
+                        (click)="confirmDeleteItem('model', model)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
-      <!-- Insertar Diseño -->
-      <div class="flex flex-col w-96">
-        <label
-          class="flex items-center justify-between text-s mb-2 font-normal text-[#000000]"
-        >
-          <span>Insertar Diseño</span>
+      <!-- Sección: Diseños -->
+      <div class="w-full mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-normal text-[#000000]"
+            >Insertar Diseño</span
+          >
           <button
             type="button"
             aria-label="Agregar diseño"
-            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-white text-s leading-none select-none"
+            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-sm text-white"
             (click)="openModal('design')"
           >
             Añadir
           </button>
-        </label>
+        </div>
+
+          <div class="w-full overflow-x-auto">
+          <div style="max-height: 215px; overflow-y: auto;">
+            <table class="min-w-full bg-white border border-gray-300 text-sm">
+              <thead class="bg-gray-100 text-left sticky top-0">
+                <tr>
+                  <th class="px-4 py-2 border">Diseño</th>
+                  <th class="px-4 py-2 border">Fecha de creación</th>
+                  <th class="px-4 py-2 border text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let design of designs">
+                  <td class="px-4 py-2 border">
+                    {{ design.design || design.nombre }}
+                  </td>
+                  <td class="px-4 py-2 border">
+                    {{ design.createdAt | date : "short" }}
+                  </td>
+                  <td class="px-4 py-2 border">
+                    <div class="flex justify-center space-x-2">
+                      <button
+                        type="button"
+                        class="px-2 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600"
+                        (click)="editItem('design', design)"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        class="px-2 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600"
+                        (click)="confirmDeleteItem('design', design)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
-      <!-- Cuadros blancos debajo -->
-      <div class="flex  space-x-4 w-full">
-        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
-        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
-      </div>
-
-      <!-- Insertar Tela -->
-      <div class="flex flex-col w-96">
-        <label
-          class="flex items-center justify-between text-s mb-2 font-normal text-[#000000]"
-        >
-          <span>Insertar Tela</span>
+      <!-- Sección: Telas -->
+      <div class="w-full mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-normal text-[#000000]">Insertar Tela</span>
           <button
             type="button"
             aria-label="Agregar tela"
-            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-white text-s leading-none select-none"
+            class="w-20 h-8 bg-black rounded-md flex items-center justify-center text-sm text-white"
             (click)="openModal('fabric')"
           >
             Añadir
           </button>
-        </label>
-      </div>
+        </div>
 
-      <!-- Cuadros blancos debajo -->
-      <div class="flex  space-x-4 w-full">
-        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
-        <div class="w-1/2 h-40 bg-white border border-gray-300"></div>
-      </div>
 
+        <div class="w-full overflow-x-auto">
+          <div style="max-height: 215px; overflow-y: auto;">
+            <table class="min-w-full bg-white border border-gray-300 text-sm">
+              <thead class="bg-gray-100 text-left sticky top-0">
+                <tr>
+                  <th class="px-4 py-2 border">Diseño</th>
+                  <th class="px-4 py-2 border">Color</th>
+                  <th class="px-4 py-2 border">Fecha de creación</th>
+                  <th class="px-4 py-2 border text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fabric of fabrics">
+                  <td class="px-4 py-2 border">{{ fabric.diseno }}</td>
+                  <td class="px-4 py-2 border">{{ fabric.color }}</td>
+                  <td class="px-4 py-2 border">
+                    {{ fabric.createdAt | date : "short" }}
+                  </td>
+                  <td class="px-4 py-2 border">
+                    <div class="flex justify-center space-x-2">
+                      <button
+                        type="button"
+                        class="px-2 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600"
+                        (click)="editItem('fabric', fabric)"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        class="px-2 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600"
+                        (click)="confirmDeleteItem('fabric', fabric)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </form>
 
-    <!-- Un solo componente modal que cambia según el tipo -->
+    <!-- Modal para editar o crear elementos -->
     <app-modal
       [isVisible]="showModal"
       [modalType]="currentModalType"
+      [editData]="currentItemData"
+      [isEdit]="isEditMode"
       (closeModalEvent)="closeModal()"
       (saveContentEvent)="handleSavedContent($event)"
     ></app-modal>
+
+    <!-- Modal de confirmación para eliminar -->
+    <app-confirmation-modal
+      [isVisible]="showConfirmationModal"
+      [itemType]="itemToDelete?.type || ''"
+      [itemName]="itemToDelete?.name || ''"
+      (confirmEvent)="handleConfirmation($event)"
+    ></app-confirmation-modal>
   </body>
 </html>
