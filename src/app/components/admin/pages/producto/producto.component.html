@@ -1,57 +1,130 @@
+<html lang="es">
 
-<div class="p-6 bg-white rounded-lg shadow-md">
-  <h1 class="text-2xl font-bold mb-6">Gestión de Productos</h1>
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+</head>
 
-  <div class="mb-6">
-    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
-      Nuevo Producto
+<body class="bg-[#f6f6f6] p-6">
+  <main class="max-w-5xl mx-auto bg-[#f6f6f6] rounded-2xl p-8 flex flex-col gap-8">
+    <div class="flex flex-col md:flex-row gap-8">
+      <section class="flex-1 max-w-xl">
+        <h2 class="font-bold text-lg mb-6">
+          Producto
+        </h2>
+        <label class="block text-xs text-[#3a3a3a] font-normal mb-1" for="nombre">
+          Nombre del producto
+        </label>
+        <input
+          class="w-full rounded-md border-0 py-2 px-4 mb-6 text-center text-sm font-normal text-[#3a3a3a] bg-white focus:outline-none"
+          id="nombre" type="text" value="terno vino" />
+        <div class="flex flex-wrap gap-x-6 gap-y-2 mb-4 text-xs text-[#3a3a3a] font-normal">
+          <p class="min-w-[90px]">
+            Modelo: Clasico
+          </p>
+          <p class="min-w-[90px]">
+            Diseño: Machete
+          </p>
+          <p class="min-w-[90px]">
+            Tela: D54E65
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-x-6 gap-y-2 mb-6 text-xs text-[#3a3a3a] font-normal">
+          <p class="min-w-[90px]">
+            Cantidad Total: 15
+          </p>
+          <div class="min-w-[120px] flex items-center gap-2">
+            <label for="tonalidad-color" class="text-xs text-[#3a3a3a] font-normal">Tonalidad:</label>
+            <input type="color" id="tonalidad-color"
+              class="w-8 h-6 p-0.5 rounded-md border border-gray-300 cursor-pointer" [(ngModel)]="selectedTonalidadColor">
+          </div>
+        </div>
+        <div class="mb-6">
+          <p class="text-xs font-bold mb-2">
+            Talla
+          </p>
+          <div class="flex gap-2">
+            <button class="bg-black text-white text-xs font-normal rounded px-3 py-1" type="button">
+              S
+            </button>
+            <button class="bg-[#9e9e9e] text-white text-xs font-normal rounded px-3 py-1" type="button">
+              M
+            </button>
+            <button class="bg-[#9e9e9e] text-white text-xs font-normal rounded px-3 py-1" type="button">
+              L
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-[#3a3a3a] font-normal mb-6">
+          Cantidad: 7 productos
+        </p>
+        <form class="flex flex-col gap-6 max-w-xs">
+          <div>
+            <label class="block text-xs font-bold text-[#3a3a3a] mb-1" for="precio">
+              Precio
+            </label>
+            <input
+              class="w-20 rounded-md border-0 py-1 px-2 text-xs font-normal text-[#3a3a3a] bg-white focus:outline-none"
+              id="precio" type="text" value="s/.250" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[#3a3a3a] mb-1" for="categoria">
+              Categoria
+            </label>
+            <select
+              class="w-full rounded-md border-0 py-1 px-2 text-xs font-normal text-[#9e9e9e] bg-white focus:outline-none"
+              id="categoria">
+              <option disabled="" selected="">
+                Seleccione
+              </option>
+              <option>
+                Categoria 1
+              </option>
+              <option>
+                Categoria 2
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-normal text-[#3a3a3a] mb-1" for="descripcion">
+              Descripcion
+            </label>
+            <textarea
+              class="w-full rounded-md border-0 py-2 px-3 text-xs font-normal text-[#3a3a3a] bg-white resize-none focus:outline-none"
+              id="descripcion" rows="6"></textarea>
+          </div>
+        </form>
+      </section>
+      <section class="flex flex-col items-center gap-4 max-w-md w-full">
+        <button
+          class="w-full bg-black text-white rounded-md py-2 px-6 flex items-center justify-center gap-2 text-xs font-normal"
+          type="button" (click)="openUploadModal()"> Subir fotos
+        </button>
+        <img alt="Hombre con terno azul marino de pie frente a fondo gris claro"
+          class="rounded-xl w-full max-w-md object-cover" height="500"
+          src="https://storage.googleapis.com/a1aa/image/82ef0ee9-dab7-4812-1ca1-ab458e974658.jpg" width="400" />
+        <div class="flex justify-center gap-4 mt-2">
+          <span aria-label="Indicador de imagen activo" class="w-3 h-3 rounded-full bg-black inline-block">
+          </span>
+          <span aria-label="Indicador de imagen" class="w-3 h-3 rounded-full bg-black inline-block">
+          </span>
+          <span aria-label="Indicador de imagen" class="w-3 h-3 rounded-full bg-black inline-block">
+          </span>
+          <span aria-label="Indicador de imagen" class="w-3 h-3 rounded-full bg-black inline-block">
+          </span>
+        </div>
+      </section>
+    </div>
+
+    <button class="bg-[#1a1726] text-white text-xs font-normal rounded-md py-2 px-6 w-max" type="submit">
+      Guardar
     </button>
-  </div>
+  </main>
 
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          <th class="py-3 px-4 border-b text-left">ID</th>
-          <th class="py-3 px-4 border-b text-left">Nombre</th>
-          <th class="py-3 px-4 border-b text-left">Categoría</th>
-          <th class="py-3 px-4 border-b text-left">Stock</th>
-          <th class="py-3 px-4 border-b text-left">Precio</th>
-          <th class="py-3 px-4 border-b text-left">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="hover:bg-gray-50">
-          <td class="py-2 px-4 border-b">001</td>
-          <td class="py-2 px-4 border-b">Producto Ejemplo 1</td>
-          <td class="py-2 px-4 border-b">Categoría A</td>
-          <td class="py-2 px-4 border-b">150</td>
-          <td class="py-2 px-4 border-b">$25.99</td>
-          <td class="py-2 px-4 border-b">
-            <button class="text-blue-500 hover:text-blue-700 mr-2">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="text-red-500 hover:text-red-700">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-        <tr class="hover:bg-gray-50">
-          <td class="py-2 px-4 border-b">002</td>
-          <td class="py-2 px-4 border-b">Producto Ejemplo 2</td>
-          <td class="py-2 px-4 border-b">Categoría B</td>
-          <td class="py-2 px-4 border-b">75</td>
-          <td class="py-2 px-4 border-b">$34.50</td>
-          <td class="py-2 px-4 border-b">
-            <button class="text-blue-500 hover:text-blue-700 mr-2">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="text-red-500 hover:text-red-700">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+  <app-modal-imagen [isOpen]="isUploadModalOpen" (closeModal)="closeUploadModal()"
+    (filesSelected)="handleSelectedFiles($event)">
+  </app-modal-imagen>
+
+</body>
+
+</html>

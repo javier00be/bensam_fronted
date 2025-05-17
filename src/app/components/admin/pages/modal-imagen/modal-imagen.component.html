@@ -1,0 +1,47 @@
+<div *ngIf="isOpen"
+     class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50 p-4"> <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold">Subir Imágenes del Producto</h3>
+      <button (click)="close()" class="text-gray-600 hover:text-gray-800 text-2xl leading-none">&times;</button>
+    </div>
+
+    <div>
+      <div
+        class="border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer transition hover:border-gray-500"
+        (click)="fileInput.click()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)">
+        <input type="file" multiple hidden #fileInput (change)="onFileSelected($event)">
+        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <p class="mt-1 text-sm text-gray-600">Arrastra y suelta archivos aquí o</p>
+        <p class="text-blue-600 text-sm font-medium">haz clic para seleccionar</p>
+        <p *ngIf="selectedFiles.length > 0" class="mt-2 text-sm text-gray-800">{{ selectedFiles.length }} archivo(s) seleccionado(s)</p>
+      </div>
+
+      <div *ngIf="imagePreviews.length > 0" class="mt-6 grid grid-cols-3 gap-2">
+        <div *ngFor="let preview of imagePreviews; let i = index" class="relative group">
+          <img [src]="preview" [alt]="'Preview ' + (i + 1)" class="w-full h-20 object-cover rounded">
+          <button
+            (click)="removeFile(i)"
+            class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+            aria-label="Eliminar imagen">
+            &times;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end gap-3">
+      <button (click)="close()" class="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 transition">Cancelar</button>
+      <button
+        (click)="uploadImages()"
+        [disabled]="selectedFiles.length === 0"
+        class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        Subir Imágenes ({{ selectedFiles.length }})
+      </button>
+    </div>
+  </div>
+</div>

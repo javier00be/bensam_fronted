@@ -1,147 +1,143 @@
-
-  <div class="max-w-7xl w-full rounded-2xl bg-gray-100 p-8 select-none" style="font-feature-settings: 'liga' 0">
-    <h1 class="text-lg font-semibold text-gray-900 mb-6">Almacen</h1>
-    <div class="flex flex-col md:flex-row md:space-x-8">
-      <!-- Left card -->
-      <div class="bg-white rounded-xl p-6 w-full md:w-64 mb-6 md:mb-0 shadow-sm" style="font-feature-settings: 'liga' 0">
-        <p class="text-xs font-semibold text-gray-900 mb-1">Cantidad en inventario</p>
-        <p class="text-2xl font-bold text-gray-900 mb-2">9 tot.</p>
-        <div class="flex justify-end mb-3">
-          <i class="fas fa-chart-bar text-gray-900 text-xl"></i>
-        </div>
-        <p class="text-xs text-gray-500 mb-0.5">Cantidad de S: 1</p>
-        <p class="text-xs text-gray-500 mb-0.5">Cantidad de M: 5</p>
-        <p class="text-xs text-gray-500 mb-4">Cantidad de L: 3</p>
-        <button class="bg-black text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-900 transition" type="button">Agregar Producto</button>
+<div class="max-w-7xl w-full rounded-2xl bg-gray-100 p-8 select-none" style="font-feature-settings: 'liga' 0">
+  <h1 class="text-lg font-semibold text-gray-900 mb-6">Almacen</h1>
+  <div class="flex flex-col md:flex-row md:space-x-8">
+    <div class="bg-white rounded-xl p-6 w-full md:w-64 mb-6 md:mb-0 shadow-sm" style="font-feature-settings: 'liga' 0">
+      <p class="text-xs font-semibold text-gray-900 mb-1">Cantidad en inventario</p>
+      <p class="text-2xl font-bold text-gray-900 mb-2">9 tot.</p>
+      <div class="flex justify-end mb-3">
+        <i class="fas fa-chart-bar text-gray-900 text-xl"></i>
       </div>
-      <!-- Middle chart -->
-      <div class="flex-1 bg-white rounded-xl p-6 flex items-center justify-center space-x-6 shadow-sm" style="font-feature-settings: 'liga' 0">
-        <div class="flex flex-col items-center space-y-1 text-gray-600 text-xs">
-          <span>S</span>
-          <div class="w-8 h-3 bg-black rounded-sm"></div>
-          <span>1</span>
-        </div>
-        <div class="flex flex-col items-center space-y-1 text-gray-600 text-xs">
-          <span>M</span>
-          <div class="w-12 h-6 bg-gray-800 rounded-sm"></div>
-          <span>5</span>
-        </div>
-        <div class="flex flex-col items-center space-y-1 text-gray-600 text-xs">
-          <span>L</span>
-          <div class="w-10 h-4 bg-gray-400 rounded-sm"></div>
-          <span>3</span>
-        </div>
+      <p class="text-xs text-gray-500 mb-0.5">Cantidad de S: 1</p>
+      <p class="text-xs text-gray-500 mb-0.5">Cantidad de M: 5</p>
+      <p class="text-xs text-gray-500 mb-4">Cantidad de L: 3</p>
+      <button class="bg-black text-white text-xs font-semibold rounded-md px-4 py-2 hover:bg-gray-900 transition"
+        type="button">Agregar Producto</button>
+    </div>
+    <div class="flex-1 bg-white rounded-xl p-6 flex items-center justify-center space-x-6 shadow-sm"
+      style="font-feature-settings: 'liga' 0">
+      <div class="flex flex-col items-center space-y-1 text-gray-600 text-xs">
+        <span>S</span>
+        <div class="w-8 h-3 bg-black rounded-sm"></div>
+        <span>1</span>
       </div>
-      <!-- Right form -->
-      <form class="w-full md:w-64 mt-6 md:mt-0 flex flex-col space-y-4">
-        <div>
-          <label for="modelo" class="block text-xs font-semibold text-gray-900 mb-1">Modelo</label>
-          <select id="modelo" name="modelo" class="w-full rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black">
-            <option>Seleccione</option>
-          </select>
-        </div>
-        <div>
-          <label for="diseno" class="block text-xs font-semibold text-gray-900 mb-1">Diseño</label>
-          <select id="diseno" name="diseno" class="w-full rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black">
-            <option>Seleccione</option>
-          </select>
-        </div>
-        <div>
-          <label for="tela" class="block text-xs font-semibold text-gray-900 mb-1">Tela</label>
-          <select id="tela" name="tela" class="w-full rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black">
-            <option>Seleccione</option>
-          </select>
-        </div>
-        <button type="submit" class="bg-black text-white text-xs font-semibold rounded-md py-2 mt-2">Añadir</button>
+      <div class="flex flex-col items-center space-y-1 text-gray-600 text-xs">
+        <span>M</span>
+        <div class="w-12 h-6 bg-gray-800 rounded-sm"></div>
+        <span>5</span>
+      </div>
+      <div class="flex flex-col items-center space-y-1 text-gray-600 text-xs">
+        <span>L</span>
+        <div class="w-10 h-4 bg-gray-400 rounded-sm"></div>
+        <span>3</span>
+      </div>
+    </div>
+    <form class="w-full md:w-64 mt-6 md:mt-0 flex flex-col space-y-4">
+      <div>
+        <label for="modelo" class="block text-xs font-semibold text-gray-900 mb-1">Modelo</label>
+        <select id="modelo" name="modelo"
+          class="w-full rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black">
+          <option>Seleccione</option>
+        </select>
+      </div>
+      <div>
+        <label for="diseno" class="block text-xs font-semibold text-gray-900 mb-1">Diseño</label>
+        <select id="diseno" name="diseno"
+          class="w-full rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black">
+          <option>Seleccione</option>
+        </select>
+      </div>
+      <div>
+        <label for="tela" class="block text-xs font-semibold text-gray-900 mb-1">Tela</label>
+        <select id="tela" name="tela"
+          class="w-full rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black">
+          <option>Seleccione</option>
+        </select>
+      </div>
       </form>
-    </div>
-    <!-- Search input -->
-    <div class="mt-8 flex flex-col md:flex-row md:items-center md:space-x-4">
-      <input type="text" placeholder="Buscar su producto" class="flex-1 rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 mb-4 md:mb-0 focus:outline-none focus:ring-1 focus:ring-black" />
-      <div class="md:flex-1"></div>
-    </div>
-    <!-- Table -->
-    <div class="mt-4 overflow-x-auto rounded-lg shadow-sm">
-      <table class="w-full text-xs text-left text-gray-700 border-collapse border border-gray-200">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">Modelo</th>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">Diseño</th>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">Tela</th>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">S</th>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">M</th>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">L</th>
-            <th class="py-2 px-3 border border-gray-200 font-semibold">Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-          <tr class="border border-gray-200">
-            <td class="py-2 px-3 border border-gray-200">Clásico</td>
-            <td class="py-2 px-3 border border-gray-200">Machete</td>
-            <td class="py-2 px-3 border border-gray-200">D4032</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">3</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">1</td>
-            <td class="py-2 px-3 border border-gray-200 text-center">2</td>
-            <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-
-
+  <div class="mt-8 flex flex-col md:flex-row md:items-center md:space-x-4">
+    <input type="text" placeholder="Buscar su producto"
+      class="flex-1 rounded-md border border-gray-300 text-xs text-gray-900 py-2 px-3 mb-4 md:mb-0 focus:outline-none focus:ring-1 focus:ring-black" />
+    <div class="md:flex-1"></div> <button type="submit" class="bg-black text-white text-xs font-semibold rounded-md py-2 px-4 hover:bg-gray-900 transition">Añadir</button> </div>
+  <div class="mt-4 overflow-x-auto rounded-lg shadow-sm">
+    <table class="w-full text-xs text-left text-gray-700 border-collapse border border-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">Modelo</th>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">Diseño</th>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">Tela</th>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">S</th>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">M</th>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">L</th>
+          <th class="py-2 px-3 border border-gray-200 font-semibold">Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+        <tr class="border border-gray-200">
+          <td class="py-2 px-3 border border-gray-200">Clásico</td>
+          <td class="py-2 px-3 border border-gray-200">Machete</td>
+          <td class="py-2 px-3 border border-gray-200">D4032</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">3</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">1</td>
+          <td class="py-2 px-3 border border-gray-200 text-center">2</td>
+          <td class="py-2 px-3 border border-gray-200">01/03/2025</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
