@@ -1,5 +1,6 @@
 <div *ngIf="isOpen"
-     class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50 p-4"> <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+     class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-lg font-bold">Subir Imágenes del Producto</h3>
       <button (click)="close()" class="text-gray-600 hover:text-gray-800 text-2xl leading-none">&times;</button>
@@ -12,18 +13,54 @@
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)">
-        <input type="file" multiple hidden #fileInput (change)="onFileSelected($event)">
+        <input type="file" hidden #fileInput (change)="onFileSelected($event)" accept="image/*">
+
         <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
           <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <p class="mt-1 text-sm text-gray-600">Arrastra y suelta archivos aquí o</p>
+        <p class="mt-1 text-sm text-gray-600">Arrastra y suelta UNA imagen aquí o</p>
         <p class="text-blue-600 text-sm font-medium">haz clic para seleccionar</p>
-        <p *ngIf="selectedFiles.length > 0" class="mt-2 text-sm text-gray-800">{{ selectedFiles.length }} archivo(s) seleccionado(s)</p>
+        <p *ngIf="selectedFiles.length > 0" class="mt-2 text-sm text-gray-800">{{ selectedFiles.length }} imagen(es) recortada(s) lista(s)</p>
+        <p *ngIf="selectedFiles.length === 0 && !showCropper" class="mt-2 text-sm text-gray-800">No hay imágenes seleccionadas.</p>
+      </div>
+
+      <button (click)="loadTestImage()" class="mt-4 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition">Cargar Imagen de Prueba (DEBUG)</button>
+      <div *ngIf="showCropper && imageChangedEvent" class="mt-6 p-4 border rounded-md bg-gray-50">
+        <h4 class="text-md font-semibold mb-3">Recortar Imagen</h4>
+        <div class="flex flex-col items-center">
+          <image-cropper
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1 / 1"
+            [resizeToWidth]="400"
+            [onlyScaleDown]="true"
+            format="png"             (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded($event)"
+            (cropperReady)="cropperReady()"
+            (loadImageFailed)="loadImageFailed()"
+            class="w-full max-h-[300px] overflow-hidden"
+            style="width: 100%; height: 300px; background-color: #f0f0f0; border: 1px dashed blue;"
+          ></image-cropper>
+
+          <div *ngIf="croppedImage" class="mt-4 text-center">
+            <h5 class="text-sm font-medium mb-2">Previsualización del recorte:</h5>
+            <img [src]="croppedImage" class="w-24 h-24 object-cover rounded-md border" alt="Recorte de imagen">
+          </div>
+
+          <button
+            (click)="addCroppedImage()"
+            [disabled]="!croppedImage"
+            class="mt-4 px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            Añadir Imagen Recortada
+          </button>
+        </div>
       </div>
 
       <div *ngIf="imagePreviews.length > 0" class="mt-6 grid grid-cols-3 gap-2">
         <div *ngFor="let preview of imagePreviews; let i = index" class="relative group">
-          <img [src]="preview" [alt]="'Preview ' + (i + 1)" class="w-full h-20 object-cover rounded">
+          <div class="w-full h-20 overflow-hidden rounded">
+            <img [src]="preview" [alt]="'Previsualización ' + (i + 1)" class="w-full h-full object-cover">
+          </div>
           <button
             (click)="removeFile(i)"
             class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"

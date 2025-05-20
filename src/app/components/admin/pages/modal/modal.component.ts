@@ -246,5 +246,4 @@ export class ModalComponent implements OnInit, OnChanges {
     this.showStatus = true;
     console.error('Error en la operación:', error);
   }
-  
 }
