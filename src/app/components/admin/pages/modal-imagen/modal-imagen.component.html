@@ -1,19 +1,20 @@
 <div *ngIf="isOpen"
      class="fixed inset-0 bg-gray-500/75 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+  <div class="bg-white rounded-lg p-6 w-full max-w-6xl shadow-xl max-h-[95vh] overflow-y-auto">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-lg font-bold">Subir Imágenes del Producto</h3>
       <button (click)="close()" class="text-gray-600 hover:text-gray-800 text-2xl leading-none">&times;</button>
     </div>
 
     <div>
-      <div
+      <!-- Área de selección de archivos -->
+      <div *ngIf="!showCropper"
         class="border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer transition hover:border-gray-500"
         (click)="fileInput.click()"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)">
-        <input type="file" hidden #fileInput (change)="onFileSelected($event)" accept="image/*">
+        <input type="file" hidden #fileInput (change)="onFileSelected($event)" accept="image/*" multiple="false">
 
         <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
           <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -21,63 +22,157 @@
         <p class="mt-1 text-sm text-gray-600">Arrastra y suelta UNA imagen aquí o</p>
         <p class="text-blue-600 text-sm font-medium">haz clic para seleccionar</p>
         <p *ngIf="selectedFiles.length > 0" class="mt-2 text-sm text-gray-800">{{ selectedFiles.length }} imagen(es) recortada(s) lista(s)</p>
-        <p *ngIf="selectedFiles.length === 0 && !showCropper" class="mt-2 text-sm text-gray-800">No hay imágenes seleccionadas.</p>
+        <p *ngIf="selectedFiles.length === 0" class="mt-2 text-sm text-gray-800">No hay imágenes seleccionadas.</p>
       </div>
 
-      <button (click)="loadTestImage()" class="mt-4 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition">Cargar Imagen de Prueba (DEBUG)</button>
+      <!-- Área del cropper COMPLETAMENTE CORREGIDA -->
       <div *ngIf="showCropper && imageChangedEvent" class="mt-6 p-4 border rounded-md bg-gray-50">
-        <h4 class="text-md font-semibold mb-3">Recortar Imagen</h4>
-        <div class="flex flex-col items-center">
-          <image-cropper
-            [imageChangedEvent]="imageChangedEvent"
-            [maintainAspectRatio]="true"
-            [aspectRatio]="1 / 1"
-            [resizeToWidth]="400"
-            [onlyScaleDown]="true"
-            format="png"             (imageCropped)="imageCropped($event)"
-            (imageLoaded)="imageLoaded($event)"
-            (cropperReady)="cropperReady()"
-            (loadImageFailed)="loadImageFailed()"
-            class="w-full max-h-[300px] overflow-hidden"
-            style="width: 100%; height: 300px; background-color: #f0f0f0; border: 1px dashed blue;"
-          ></image-cropper>
+        <h4 class="text-md font-semibold mb-4">Recortar Imagen</h4>
 
-          <div *ngIf="croppedImage" class="mt-4 text-center">
-            <h5 class="text-sm font-medium mb-2">Previsualización del recorte:</h5>
-            <img [src]="croppedImage" class="w-24 h-24 object-cover rounded-md border" alt="Recorte de imagen">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <!-- Cropper - Ocupa 2 columnas -->
+          <div class="xl:col-span-2">
+            <h5 class="text-sm font-medium mb-3">Imagen Original - Selecciona el área a recortar:</h5>
+            <div class="w-full bg-white rounded border shadow-sm overflow-hidden">
+              <image-cropper
+                [imageChangedEvent]="imageChangedEvent"
+                [maintainAspectRatio]="true"
+                [aspectRatio]="1"
+                [resizeToWidth]="512"
+                [resizeToHeight]="512"
+                [onlyScaleDown]="false"
+                [cropperMinWidth]="100"
+                [cropperMinHeight]="100"
+                [canvasRotation]="canvasRotation"
+                [transform]="transform"
+                [alignImage]="'left'"
+                [backgroundColor]="'#ffffff'"
+                [autoCrop]="true"
+                [containWithinAspectRatio]="false"
+                [hideResizeSquares]="false"
+                [cropperStaticWidth]="0"
+                [cropperStaticHeight]="0"
+                [roundCropper]="false"
+                format="png"
+                outputType="base64"
+                (imageCropped)="imageCropped($event)"
+                (imageLoaded)="imageLoaded($event)"
+                (cropperReady)="cropperReady()"
+                (loadImageFailed)="loadImageFailed()"
+                class="w-full block"
+                style="min-height: 500px; max-height: 600px;">
+              </image-cropper>
+            </div>
+
+            <!-- Controles de zoom y rotación -->
+            <div class="mt-3 flex flex-wrap gap-2 justify-center">
+              <button (click)="zoomToFit()" class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                Ajustar a pantalla
+              </button>
+              <button (click)="resetImage()" class="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600">
+                Resetear
+              </button>
+            </div>
           </div>
 
-          <button
-            (click)="addCroppedImage()"
-            [disabled]="!croppedImage"
-            class="mt-4 px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
-            Añadir Imagen Recortada
-          </button>
+          <!-- Panel de previsualización - 1 columna -->
+          <div class="xl:col-span-1 flex flex-col">
+            <h5 class="text-sm font-medium mb-3">Previsualización del recorte:</h5>
+
+            <!-- Indicador de estado del cropper -->
+            <div *ngIf="!cropperReady_" class="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded text-sm">
+              <p class="text-yellow-800">⏳ Cargando recortador...</p>
+            </div>
+
+            <!-- Previsualización grande -->
+            <div class="flex justify-center mb-4">
+              <div class="p-4 bg-white rounded border shadow-sm">
+                <div *ngIf="croppedImage && cropperReady_; else noPreview" class="flex flex-col items-center">
+                  <img [src]="croppedImage"
+                       class="w-64 h-64 object-cover rounded-lg border shadow-sm"
+                       alt="Previsualización del recorte">
+                  <p class="text-xs text-gray-500 mt-2">512 x 512 px</p>
+                </div>
+                <ng-template #noPreview>
+                  <div class="w-64 h-64 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                    <div class="text-center">
+                      <svg class="mx-auto h-12 w-12 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                      </svg>
+                      <p class="text-gray-500 text-sm text-center">
+                        <span *ngIf="!cropperReady_">Cargando...</span>
+                        <span *ngIf="cropperReady_">Selecciona un área<br>para ver el recorte</span>
+                      </p>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col gap-3">
+              <button
+                (click)="addCroppedImage()"
+                [disabled]="!croppedImage || !cropperReady_"
+                class="w-full px-4 py-3 rounded bg-green-600 text-white hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-medium">
+                <span *ngIf="cropperReady_">✓ Añadir Imagen Recortada</span>
+                <span *ngIf="!cropperReady_">⏳ Cargando...</span>
+              </button>
+
+              <button
+                (click)="resetCropperState()"
+                class="w-full px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-600 transition text-sm">
+                ✕ Cancelar Recorte
+              </button>
+            </div>
+
+            <!-- Info del archivo actual -->
+            <div *ngIf="currentFileToCrop" class="mt-4 p-3 bg-gray-100 rounded text-xs">
+              <p><strong>Archivo:</strong> {{ currentFileToCrop.name }}</p>
+              <p><strong>Tamaño:</strong> {{ (currentFileToCrop.size / 1024 / 1024).toFixed(2) }} MB</p>
+              <p><strong>Tipo:</strong> {{ currentFileToCrop.type }}</p>
+              <p><strong>Estado:</strong>
+                <span *ngIf="cropperReady_" class="text-green-600">✓ Listo</span>
+                <span *ngIf="!cropperReady_" class="text-orange-600">⏳ Cargando</span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div *ngIf="imagePreviews.length > 0" class="mt-6 grid grid-cols-3 gap-2">
-        <div *ngFor="let preview of imagePreviews; let i = index" class="relative group">
-          <div class="w-full h-20 overflow-hidden rounded">
-            <img [src]="preview" [alt]="'Previsualización ' + (i + 1)" class="w-full h-full object-cover">
+      <!-- Grid de imágenes añadidas -->
+      <div *ngIf="imagePreviews.length > 0" class="mt-6">
+        <h4 class="text-md font-semibold mb-3">Imágenes Añadidas ({{ imagePreviews.length }})</h4>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div *ngFor="let preview of imagePreviews; let i = index" class="relative group">
+            <div class="w-full aspect-square overflow-hidden rounded border shadow-sm bg-white">
+              <img [src]="preview"
+                   [alt]="'Imagen ' + (i + 1)"
+                   class="w-full h-full object-cover hover:scale-105 transition-transform cursor-pointer">
+            </div>
+            <button
+              (click)="removeFile(i)"
+              class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-lg"
+              aria-label="Eliminar imagen">
+              ×
+            </button>
+            <p class="text-xs text-gray-500 text-center mt-1">Imagen {{ i + 1 }}</p>
           </div>
-          <button
-            (click)="removeFile(i)"
-            class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Eliminar imagen">
-            &times;
-          </button>
         </div>
       </div>
     </div>
 
-    <div class="mt-6 flex justify-end gap-3">
-      <button (click)="close()" class="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 transition">Cancelar</button>
+    <!-- Botones de acción principal -->
+    <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t">
+      <button (click)="close()"
+              class="px-6 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 transition order-2 sm:order-1">
+        Cancelar
+      </button>
       <button
         (click)="uploadImages()"
         [disabled]="selectedFiles.length === 0"
-        class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
-        Subir Imágenes ({{ selectedFiles.length }})
+        class="px-6 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2">
+        Subir {{ selectedFiles.length }} Imagen{{ selectedFiles.length !== 1 ? 'es' : '' }}
       </button>
     </div>
   </div>
