@@ -1,148 +1,207 @@
-<div class="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+<div class="min-h-screen bg-[#f9fafc] p-4 sm:p-6 lg:p-8">
   <div class="max-w-full w-full">
-    <h1 class="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-6">Almacén</h1>
+    <h1 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 mb-6">Almacén</h1>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
 
-      <div class="lg:col-span-3 bg-white rounded-xl p-4 sm:p-6 shadow-sm">
-        <p class="text-xs sm:text-sm font-semibold text-gray-900 mb-1">Cantidad en inventario</p>
-        <p class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{{ cantidadTotalInventario }} tot.</p>
-        <div class="flex justify-end mb-3">
-          <i class="fas fa-chart-bar text-gray-900 text-lg sm:text-xl"></i>
+      <div class="lg:col-span-3 bg-white rounded-lg p-6 shadow-sm flex flex-col justify-between">
+        <div>
+          <p class="text-xs font-semibold text-gray-900 mb-1">Cantidad en inventario</p>
+          <p class="text-2xl font-extrabold text-gray-900 mb-3">
+            {{ cantidadTotalInventario }} <span class="font-bold">tot.</span>
+          </p>
+
+          <div class="space-y-0.5 mb-1">
+            <p class="text-xs text-gray-600">Cantidad de S: {{ cantidadTotalS }}</p>
+            <p class="text-xs text-gray-600">Cantidad de M: {{ cantidadTotalM }}</p>
+            <p class="text-xs text-gray-600">Cantidad de L: {{ cantidadTotalL }}</p>
+          </div>
+
+          <button
+            type="button"
+            (click)="toggleInventoryDetails()"
+            class="text-xs font-semibold text-black mt-1 hover:underline focus:outline-none"
+          >
+            {{ mostrarDetallesInventario ? 'Ver menos' : 'Ver más' }}
+          </button>
+
+          <div *ngIf="mostrarDetallesInventario" class="space-y-0.5 mt-2">
+            <p class="text-xs text-gray-600">Cantidad de XS: {{ cantidadTotalXS }}</p>
+            <p class="text-xs text-gray-600">Cantidad de XL: {{ cantidadTotalXL }}</p>
+            <p class="text-xs text-gray-600">Cantidad de XXL: {{ cantidadTotalXXL }}</p>
+            <ng-container *ngFor="let talla of tallasParaGrafico">
+                 <p *ngIf="!['S', 'M', 'L', 'XS', 'XL', 'XXL'].includes(talla.size.toUpperCase())" class="text-xs text-gray-600">
+                     Cantidad de {{ talla.size }}: {{ talla.quantity }}
+                 </p>
+             </ng-container>
+          </div>
         </div>
-        <div class="space-y-1 mb-4">
-          <p class="text-xs text-gray-500">Cantidad de S: {{ cantidadTotalS }}</p>
-          <p class="text-xs text-gray-500">Cantidad de M: {{ cantidadTotalM }}</p>
-          <p class="text-xs text-gray-500">Cantidad de L: {{ cantidadTotalL }}</p>
-        </div>
+
         <button
-          class="w-full bg-black text-white text-xs sm:text-sm font-semibold rounded-md px-4 py-2 hover:bg-gray-900 transition">
+          type="button"
+          class="w-full bg-black text-white text-xs font-semibold rounded px-4 py-2 hover:bg-gray-900 transition mt-3">
           Agregar Producto
         </button>
       </div>
 
-      <div class="lg:col-span-5 bg-white rounded-xl p-4 sm:p-6 flex items-center justify-center shadow-sm">
-        <div class="flex items-end space-x-4 sm:space-x-6">
-          <div class="flex flex-col items-center space-y-2 text-gray-600 text-xs sm:text-sm">
-            <span>S</span>
-            <div class="w-6 sm:w-8 h-3 sm:h-4 bg-black rounded-sm chart-bar" [style.height.px]="cantidadTotalS * 10"></div>
-            <span class="font-semibold">{{ cantidadTotalS }}</span>
+      <div class="lg:col-span-6 bg-white rounded-lg p-6 shadow-sm flex items-center justify-center overflow-x-auto">
+        <div class="flex items-end space-x-3 min-w-max">
+          <div class="flex flex-col items-center" *ngFor="let talla of tallasParaGrafico">
+            <div class="w-6 rounded-md mb-1"
+                 [ngClass]="talla.color"
+                 [style.height.px]="Math.max(talla.quantity * 8, 16)"></div>
+            <span class="text-xs font-semibold text-gray-900">{{ talla.size }}</span>
+            <span class="text-xs text-gray-600 mt-1">{{ talla.quantity }}</span>
           </div>
-          <div class="flex flex-col items-center space-y-2 text-gray-600 text-xs sm:text-sm">
-            <span>M</span>
-            <div class="w-8 sm:w-12 h-6 sm:h-8 bg-gray-800 rounded-sm chart-bar" [style.height.px]="cantidadTotalM * 10"></div>
-            <span class="font-semibold">{{ cantidadTotalM }}</span>
-          </div>
-          <div class="flex flex-col items-center space-y-2 text-gray-600 text-xs sm:text-sm">
-            <span>L</span>
-            <div class="w-7 sm:w-10 h-4 sm:h-5 bg-gray-400 rounded-sm chart-bar" [style.height.px]="cantidadTotalL * 10"></div>
-            <span class="font-semibold">{{ cantidadTotalL }}</span>
+          <div *ngIf="tallasParaGrafico.length === 0" class="text-gray-500 text-sm">
+            No hay datos de tallas para el gráfico.
           </div>
         </div>
       </div>
 
-      <div class="lg:col-span-4">
-        <form class="bg-white rounded-xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="lg:col-span-3">
+        <form class="bg-white rounded-lg p-6 shadow-sm space-y-4">
           <div>
-            <label for="modelo" class="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">Modelo</label>
+            <label for="modelo" class="block text-xs font-semibold text-gray-900 mb-1">Modelo</label>
             <select id="modelo" name="modelo" [(ngModel)]="modeloFiltro"
-              class="w-full rounded-md border border-gray-300 text-xs sm:text-sm text-gray-900 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+              class="w-full rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">
               <option value="">Todos</option>
               <option *ngFor="let option of opcionesModelo" [value]="option">{{ option }}</option>
             </select>
           </div>
           <div>
-            <label for="diseno" class="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">Diseño</label>
+            <label for="diseno" class="block text-xs font-semibold text-gray-900 mb-1">Diseño</label>
             <select id="diseno" name="diseno" [(ngModel)]="disenoFiltro"
-              class="w-full rounded-md border border-gray-300 text-xs sm:text-sm text-gray-900 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+              class="w-full rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">
               <option value="">Todos</option>
               <option *ngFor="let option of opcionesDiseno" [value]="option">{{ option }}</option>
             </select>
           </div>
           <div>
-            <label for="tela" class="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">Tela</label>
+            <label for="tela" class="block text-xs font-semibold text-gray-900 mb-1">Tela</label>
             <select id="tela" name="tela" [(ngModel)]="telaFiltro"
-              class="w-full rounded-md border border-gray-300 text-xs sm:text-sm text-gray-900 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+              class="w-full rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">
               <option value="">Todos</option>
               <option *ngFor="let option of opcionesTela" [value]="option">{{ option }}</option>
             </select>
           </div>
           <button type="button" (click)="limpiarFiltros()"
-            class="w-full bg-gray-200 text-gray-700 text-xs sm:text-sm font-semibold rounded-md px-4 py-2 hover:bg-gray-300 transition">
+            class="w-full bg-gray-300 text-gray-900 text-xs font-semibold rounded px-4 py-2 hover:bg-gray-400 transition">
             Limpiar Filtros
           </button>
         </form>
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+    <div class="flex flex-col sm:flex-row gap-2 mb-4">
       <input type="text" placeholder="Buscar su producto" [(ngModel)]="terminoBusqueda"
-        class="flex-1 rounded-md border border-gray-300 text-sm text-gray-900 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" />
+        class="flex-1 rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black" />
       <button type="button" (click)="abrirModal()"
-        class="bg-black text-white text-sm font-semibold rounded-md py-2 px-6 hover:bg-gray-900 transition whitespace-nowrap">
+        class="bg-black text-white text-xs font-semibold rounded py-2 px-4 hover:bg-gray-900 transition whitespace-nowrap">
         Añadir
       </button>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
       <div class="hidden sm:block overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-700">
+        <table class="w-full text-xs text-left text-gray-900">
           <thead class="bg-gray-50 border-b border-gray-200">
             <tr>
               <th class="py-3 px-4 font-semibold text-gray-900">Modelo</th>
               <th class="py-3 px-4 font-semibold text-gray-900">Diseño</th>
               <th class="py-3 px-4 font-semibold text-gray-900">Tela</th>
-              <th class="py-3 px-4 font-semibold text-gray-900 text-center">S</th>
-              <th class="py-3 px-4 font-semibold text-gray-900 text-center">M</th>
-              <th class="py-3 px-4 font-semibold text-gray-900 text-center">L</th>
+              <th class="py-3 px-4 font-semibold text-gray-900 text-center">Tallas</th>
               <th class="py-3 px-4 font-semibold text-gray-900">Fecha</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200">
-            <tr class="hover:bg-gray-50 transition-colors" *ngFor="let item of productosFiltrados">
-              <td class="py-3 px-4">{{ item.modelo }}</td>
-              <td class="py-3 px-4">{{ item.diseno }}</td>
-              <td class="py-3 px-4">{{ item.tela }}</td>
-              <td class="py-3 px-4 text-center font-semibold">{{ item.cantidadS }}</td>
-              <td class="py-3 px-4 text-center font-semibold">{{ item.cantidadM }}</td>
-              <td class="py-3 px-4 text-center font-semibold">{{ item.cantidadL }}</td>
-              <td class="py-3 px-4 text-gray-600">{{ item.fecha }}</td>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-gray-50 transition-colors" *ngFor="let item of productosFiltrados; let i = index">
+              <td class="py-3 px-4 font-semibold align-top">{{ item.modelo }}</td>
+              <td class="py-3 px-4 align-top">{{ item.diseno }}</td>
+              <td class="py-3 px-4 align-top">{{ item.tela }}</td>
+              <td class="py-3 px-4 text-center align-top">
+                <button
+                  type="button"
+                  (click)="toggleTallas(item._id || i)"
+                  class="bg-black text-white text-[10px] font-semibold px-3 py-1 rounded hover:bg-gray-900 transition"
+                  [attr.aria-expanded]="tallasVisibles[item._id || i] || false"
+                >
+                  Ver tallas
+                </button>
+                <div
+                  *ngIf="tallasVisibles[item._id || i]"
+                  class="mt-2 flex flex-wrap justify-center gap-1 text-[9px] font-semibold"
+                >
+                  <ng-container *ngIf="item.tallas.length > 0; else noTallas">
+                    <span *ngFor="let talla of item.tallas"
+                          class="inline-block bg-gray-200 rounded px-2 py-0.5">
+                      {{ talla.size }}: {{ talla.quantity }}
+                    </span>
+                  </ng-container>
+                  <ng-template #noTallas>
+                      <span class="text-gray-500">No hay tallas registradas</span>
+                  </ng-template>
+                </div>
+              </td>
+              <td class="py-3 px-4 text-gray-400 align-top">{{ item.fechaEntrada }}</td>
             </tr>
-            <tr *ngIf="productosFiltrados.length === 0">
-                <td colspan="7" class="py-4 px-4 text-center text-gray-500">No hay productos que coincidan con los filtros.</td>
+            <tr *ngIf="isLoading">
+              <td colspan="5" class="py-4 px-4 text-center text-gray-500">Cargando productos...</td>
+            </tr>
+            <tr *ngIf="!isLoading && errorMessage">
+              <td colspan="5" class="py-4 px-4 text-center text-red-500">{{ errorMessage }}</td>
+            </tr>
+            <tr *ngIf="!isLoading && productosFiltrados.length === 0 && !errorMessage">
+              <td colspan="5" class="py-4 px-4 text-center text-gray-500">No hay productos que coincidan con los filtros.</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div class="sm:hidden divide-y divide-gray-200">
-        <div class="p-4 space-y-3" *ngFor="let item of productosFiltrados">
+        <div class="p-4 space-y-3" *ngFor="let item of productosFiltrados; let i = index">
           <div class="flex justify-between items-start">
             <div>
               <h3 class="font-semibold text-gray-900">{{ item.modelo }} - {{ item.diseno }}</h3>
               <p class="text-sm text-gray-600">Tela: {{ item.tela }}</p>
-              <p class="text-xs text-gray-500 mt-1">{{ item.fecha }}</p>
+              <p class="text-xs text-gray-400 mt-1">{{ item.fechaEntrada }}</p>
             </div>
           </div>
-          <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-            <div class="flex space-x-4">
-              <div class="text-center">
-                <div class="text-xs text-gray-500">S</div>
-                <div class="font-semibold text-sm">{{ item.cantidadS }}</div>
-              </div>
-              <div class="text-center">
-                <div class="text-xs text-gray-500">M</div>
-                <div class="font-semibold text-sm">{{ item.cantidadM }}</div>
-              </div>
-              <div class="text-center">
-                <div class="text-xs text-gray-500">L</div>
-                <div class="font-semibold text-sm">{{ item.cantidadL }}</div>
-              </div>
-            </div>
-          </div>
+
+          <td class="py-3 px-4 text-center align-top">
+                <button
+                  type="button"
+                  (click)="toggleTallas(item._id || i)"
+                  class="bg-black text-white text-[10px] font-semibold px-3 py-1 rounded hover:bg-gray-900 transition"
+                  [attr.aria-expanded]="tallasVisibles[item._id || i] || false"
+                >
+                  Ver tallas
+                </button>
+                <div
+                  *ngIf="tallasVisibles[item._id || i]"
+                  class="mt-2 flex flex-wrap justify-center gap-1 text-[9px] font-semibold"
+                >
+                  <ng-container *ngIf="item.tallas.length > 0">
+                    <span *ngFor="let talla of item.tallas"
+                          class="inline-block bg-gray-200 rounded px-2 py-0.5">
+                      {{ talla.size }}: {{ talla.quantity }}
+                    </span>
+                  </ng-container>
+                  <ng-container *ngIf="item.tallas.length === 0">
+                      <span class="text-gray-500">No hay tallas registradas</span>
+                  </ng-container>
+                  </div>
+              </td>
         </div>
-         <div *ngIf="productosFiltrados.length === 0" class="p-4 text-center text-gray-500">
-            No hay productos que coincidan con los filtros.
+
+        <div *ngIf="isLoading" class="p-4 text-center text-gray-500">
+          Cargando productos...
+        </div>
+        <div *ngIf="!isLoading && errorMessage" class="p-4 text-center text-red-500">
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="!isLoading && productosFiltrados.length === 0 && !errorMessage">
+          <div class="p-4 text-center text-gray-500">No hay productos que coincidan con los filtros.</div>
         </div>
       </div>
     </div>
@@ -150,6 +209,7 @@
 </div>
 
 <app-modal-almacen
+  *ngIf="modalAbierto"
   [isOpen]="modalAbierto"
   (closeModal)="cerrarModal()"
   (productSaved)="onProductoGuardado($event)">

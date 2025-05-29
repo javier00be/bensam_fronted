@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   // Asegúrate de que esta URL tenga http:// o https:// al inicio
@@ -25,7 +25,6 @@ export class UserService {
   insertar_tela(fabricData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/tela/crear`, fabricData);
   }
-
 
   // Obtener modelos
   obtener_modelo(): Observable<any[]> {
@@ -72,7 +71,11 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/tela/eliminar/${id}`);
   }
 
-   // Obtener modelo por ID
+  obtener_modelos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/modelo/obtener`);
+  }
+
+  // Obtener modelo por ID
   obtener_modelo_por_id(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/modelo/obtener/${id}`);
   }
@@ -86,4 +89,30 @@ export class UserService {
   obtener_tela_por_id(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/tela/obtener/${id}`);
   }
+
+  insertar_talla(tallaData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/talla/crear`, tallaData);
+  }
+
+  obtener_tallas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/talla/obtener`);
+  }
+
+  actualizar_talla(id: string, tallaData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/talla/actualizar/${id}`, tallaData);
+  }
+
+  eliminar_talla(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/talla/eliminar/${id}`);
+  }
+
+  //Metdo para el almacaen
+  insertar_almacen(almacenData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/almacen/crear`, almacenData);
+  }
+
+  obtener_almacen(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/almacen/obtener`);
+  }
+
 }

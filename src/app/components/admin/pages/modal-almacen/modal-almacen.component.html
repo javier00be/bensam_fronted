@@ -1,177 +1,391 @@
-<!-- Modal Agregar Producto con estilo Tailwind UI -->
-<div *ngIf="isOpen" class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  <!-- Fondo semitransparente -->
-  <div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
+<!-- Modal Backdrop -->
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4"
+>
+  <div
+    class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+  >
+    <!-- Modal Header -->
+    <div
+      class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-t-lg"
+    >
+      <h3 class="text-lg font-semibold text-gray-900">
+        Agregar Producto al Almacén
+      </h3>
+      <button
+        type="button"
+        (click)="cerrarModal()"
+        class="text-gray-400 hover:text-gray-600 transition-colors"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
 
-  <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-      <!-- Panel del modal con animación -->
-      <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+    <!-- Modal Content -->
+    <div class="px-6 py-4">
+      <!-- Loading State -->
+      <div *ngIf="isLoadingData" class="text-center py-12">
+        <div
+          class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-blue-500"
+        >
+          <svg
+            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Cargando datos del sistema...
+        </div>
+        <p class="text-gray-600 mt-4">
+          Por favor espere mientras cargamos los modelos, diseños y telas
+          disponibles.
+        </p>
+      </div>
 
-        <!-- Cabecera y contenido del modal -->
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <!-- Icono del modal -->
-            <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:size-10">
-              <svg class="size-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
+      <!-- Error State -->
+      <div *ngIf="errorMessage && !isLoadingData" class="text-center py-8">
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+        >
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+        </div>
+        <button
+          (click)="recargarDatos()"
+          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Reintentar Carga
+        </button>
+      </div>
 
-            <!-- Título y contenido -->
-            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-              <div class="flex items-center justify-between">
-                <h3 class="text-base font-semibold text-gray-900" id="modal-title">
-                  Agregar Producto al Inventario
-                </h3>
-                <button (click)="cerrarModal()" class="text-gray-400 hover:text-gray-600">
-                  <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <!-- Mensaje de Estado -->
-              <div *ngIf="showError"
-                  class="mt-3 p-3 rounded-md bg-red-100 text-red-700 text-sm">
-                Por favor complete todos los campos y agregue al menos una talla.
-              </div>
-
-              <div class="mt-4 space-y-6">
-                <!-- Formulario Principal -->
-                <form class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <!-- Modelo -->
-                  <div>
-                    <label for="modelo" class="block text-sm font-medium text-gray-700 mb-2">Modelo</label>
-                    <select id="modelo" [(ngModel)]="modeloSeleccionado" name="modelo"
-                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3 border">
-                      <option value="">Seleccione</option>
-                      <option value="clasico">Clásico</option>
-                      <option value="moderno">Moderno</option>
-                      <option value="deportivo">Deportivo</option>
-                    </select>
-                  </div>
-
-                  <!-- Diseño -->
-                  <div>
-                    <label for="diseno" class="block text-sm font-medium text-gray-700 mb-2">Diseño</label>
-                    <select id="diseno" [(ngModel)]="disenoSeleccionado" name="diseno"
-                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3 border">
-                      <option value="">Seleccione</option>
-                      <option value="machete">Machete</option>
-                      <option value="liso">Liso</option>
-                      <option value="estampado">Estampado</option>
-                    </select>
-                  </div>
-
-                  <!-- Tela -->
-                  <div>
-                    <label for="tela" class="block text-sm font-medium text-gray-700 mb-2">Tela</label>
-                    <select id="tela" [(ngModel)]="telaSeleccionada" name="tela"
-                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3 border">
-                      <option value="">Seleccione</option>
-                      <option value="D4032">D4032</option>
-                      <option value="C2015">C2015</option>
-                      <option value="P1089">P1089</option>
-                    </select>
-                  </div>
-                </form>
-
-                <!-- Sección de Tallas -->
-                <div class="border-t pt-4">
-                  <h4 class="text-sm font-medium text-gray-900 mb-4">Agregar Tallas y Cantidades</h4>
-
-                  <!-- Agregar nueva talla -->
-                  <div class="flex flex-col sm:flex-row gap-3 mb-4 p-4 bg-gray-50 rounded-lg">
-                    <div class="flex-1">
-                      <label class="block text-xs font-medium text-gray-700 mb-1">Talla</label>
-                      <select [(ngModel)]="nuevaTalla" name="nuevaTalla"
-                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-3 border">
-                        <option value="">Seleccione</option>
-                        <option value="XS">XS</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                      </select>
-                    </div>
-                    <div class="flex-1">
-                      <label class="block text-xs font-medium text-gray-700 mb-1">Cantidad</label>
-                      <input type="number" [(ngModel)]="nuevaCantidad" name="nuevaCantidad"
-                        placeholder="0" min="1"
-                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-3 border">
-                    </div>
-                    <div class="flex items-end">
-                      <button type="button" (click)="agregarTallaCantidad()"
-                        [disabled]="!nuevaTalla || !nuevaCantidad || nuevaCantidad <= 0"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center">
-                        <svg class="size-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Agregar
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Lista de tallas agregadas -->
-                  <div *ngIf="sizeQuantities.length > 0" class="space-y-2">
-                    <h5 class="text-sm font-medium text-gray-700 mb-2">Tallas agregadas:</h5>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div *ngFor="let item of sizeQuantities; let i = index"
-                        class="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-md">
-                        <div class="flex items-center space-x-3">
-                          <div class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                            {{ item.size }}
-                          </div>
-                          <span class="text-sm text-gray-900">{{ item.quantity }} unidades</span>
-                        </div>
-                        <button type="button" (click)="eliminarTalla(i)"
-                          class="text-red-500 hover:text-red-700 p-1">
-                          <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.108 48.108 0 00-3.478.397m-12.982 0a48.108 48.108 0 013.478-.397m0 0a48.108 48.108 0 017.5 0" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Mensaje cuando no hay tallas -->
-                  <div *ngIf="sizeQuantities.length === 0"
-                    class="text-center py-6 text-gray-500 text-sm">
-                    No hay tallas agregadas. Agregue al menos una talla para continuar.
-                  </div>
-                </div>
-              </div>
-            </div>
+      <!-- Form Content - Solo se muestra cuando los datos están listos -->
+      <div *ngIf="datosListos && !isLoadingData">
+        <!-- Validation Error -->
+        <div
+          *ngIf="showError"
+          class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+        >
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ errorMessage }}</span>
           </div>
         </div>
 
-        <!-- Footer del modal con botones -->
-        <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <!-- Botón guardar -->
-          <button type="button"
-                  (click)="guardarProducto()"
-                  [disabled]="isLoading"
-                  class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto disabled:bg-blue-300 disabled:cursor-not-allowed">
-            <span *ngIf="isLoading" class="inline-block animate-spin mr-2">
-              <svg class="size-4" viewBox="0 0 24 24" fill="none">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </span>
-            {{ isLoading ? 'Guardando...' : 'Guardar Producto' }}
-          </button>
+        <!-- Main Form -->
+        <form class="space-y-6">
+          <!-- Selecciones principales -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Modelo -->
+            <div>
+              <label
+                for="modelo"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Modelo <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="modelo"
+                [(ngModel)]="modeloSeleccionado"
+                name="modelo"
+                class="block w-full rounded-md border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3"
+                [class.border-red-500]="showError && !modeloSeleccionado"
+              >
+                <option value="">Seleccione un modelo</option>
+                <option *ngFor="let modelo of modelos" [value]="modelo._id">
+                  {{ modelo.nombre }}
+                </option>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">
+                {{ modelos.length }} modelos disponibles
+              </p>
+            </div>
 
-          <!-- Botón cancelar -->
-          <button type="button"
-                  (click)="cerrarModal()"
-                  [disabled]="isLoading"
-                  class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto disabled:bg-gray-100 disabled:text-gray-400">
-            Cancelar
-          </button>
-        </div>
+            <!-- Diseño -->
+            <div>
+              <label
+                for="diseno"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Diseño <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="diseno"
+                [(ngModel)]="disenoSeleccionado"
+                name="diseno"
+                class="block w-full rounded-md border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3"
+                [class.border-red-500]="showError && !disenoSeleccionado"
+              >
+                <option value="">Seleccione un diseño</option>
+                <option *ngFor="let diseno of disenos" [value]="diseno._id">
+                  {{ diseno.nombre }}
+                </option>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">
+                {{ disenos.length }} diseños disponibles
+              </p>
+            </div>
+
+            <!-- Tela -->
+            <div>
+              <label
+                for="tela"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Tela <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="tela"
+                [(ngModel)]="telaSeleccionada"
+                name="tela"
+                class="block w-full rounded-md border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3"
+                [class.border-red-500]="showError && !telaSeleccionada"
+              >
+                <option value="">Seleccione una tela</option>
+                <option *ngFor="let tela of telas" [value]="tela._id">
+                  {{ tela.disenoColor }}
+                </option>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">
+                {{ telas.length }} telas disponibles
+              </p>
+            </div>
+          </div>
+
+          <!-- Sección de Tallas -->
+          <div class="border-t pt-6">
+            <h4 class="text-lg font-medium text-gray-900 mb-4">
+              Tallas y Cantidades <span class="text-red-500">*</span>
+            </h4>
+
+            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Talla</label
+                  >
+                  <select
+                    [(ngModel)]="nuevaTalla"
+                    name="nuevaTalla"
+                    class="block w-full rounded-md border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-3"
+                  >
+                    <option value="">Seleccione una talla</option>
+                    <option *ngFor="let talla of tallas" [value]="talla._id">
+                      {{ talla.talla }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Cantidad</label
+                  >
+                  <input
+                    type="number"
+                    [(ngModel)]="nuevaCantidad"
+                    name="nuevaCantidad"
+                    placeholder="Ingrese cantidad"
+                    min="1"
+                    class="block w-full rounded-md border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-3"
+                  />
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    (click)="agregarTallaCantidad()"
+                    [disabled]="
+                      !nuevaTalla || !nuevaCantidad || nuevaCantidad <= 0
+                    "
+                    class="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                    Agregar Talla
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista de tallas agregadas -->
+            <div *ngIf="sizeQuantities.length > 0" class="space-y-3">
+              <h5 class="text-sm font-semibold text-gray-700">
+                Tallas agregadas ({{ sizeQuantities.length }}):
+              </h5>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div
+                  *ngFor="let item of sizeQuantities; let i = index"
+                  class="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-md shadow-sm"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-800 rounded-full text-sm font-bold"
+                    >
+                      {{ item.tallaNombre }}
+                    </div>
+                    <div>
+                      <span class="text-sm font-medium text-gray-900">{{
+                        item.quantity
+                      }}</span>
+                      <span class="text-xs text-gray-500 block">unidades</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="eliminarTalla(i)"
+                    class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.108 48.108 0 00-3.478.397m-12.982 0a48.108 48.108 0 013.478-.397m0 0a48.108 48.108 0 017.5 0"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mensaje cuando no hay tallas -->
+            <div
+              *ngIf="sizeQuantities.length === 0"
+              class="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg"
+            >
+              <svg
+                class="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                />
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">
+                No hay tallas agregadas
+              </h3>
+              <p class="mt-1 text-sm text-gray-500">
+                Agregue al menos una talla con su cantidad para continuar.
+              </p>
+            </div>
+          </div>
+        </form>
       </div>
+
+      <!-- Empty State when no data loaded -->
+      <div
+        *ngIf="!datosListos && !isLoadingData && !errorMessage"
+        class="text-center py-8"
+      >
+        <p class="text-gray-600">No se pudieron cargar los datos necesarios.</p>
+        <button
+          (click)="recargarDatos()"
+          class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Cargar Datos
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div
+      class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end space-x-3 rounded-b-lg"
+    >
+      <button
+        type="button"
+        (click)="cerrarModal()"
+        class="bg-white text-gray-700 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50 transition"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        (click)="guardarProducto()"
+        [disabled]="!datosListos || isLoading"
+        class="bg-blue-600 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center"
+      >
+        <svg
+          *ngIf="isLoading"
+          class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        {{ isLoading ? "Guardando..." : "Guardar Producto" }}
+      </button>
     </div>
   </div>
 </div>
