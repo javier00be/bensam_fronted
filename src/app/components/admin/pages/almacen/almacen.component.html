@@ -30,10 +30,10 @@
             <p class="text-xs text-gray-600">Cantidad de XL: {{ cantidadTotalXL }}</p>
             <p class="text-xs text-gray-600">Cantidad de XXL: {{ cantidadTotalXXL }}</p>
             <ng-container *ngFor="let talla of tallasParaGrafico">
-                 <p *ngIf="!['S', 'M', 'L', 'XS', 'XL', 'XXL'].includes(talla.size.toUpperCase())" class="text-xs text-gray-600">
-                     Cantidad de {{ talla.size }}: {{ talla.quantity }}
-                 </p>
-             </ng-container>
+              <p *ngIf="!['S', 'M', 'L', 'XS', 'XL', 'XXL'].includes(talla.size.toUpperCase())" class="text-xs text-gray-600">
+                Cantidad de {{ talla.size }}: {{ talla.quantity }}
+              </p>
+            </ng-container>
           </div>
         </div>
 
@@ -44,21 +44,70 @@
         </button>
       </div>
 
-      <div class="lg:col-span-6 bg-white rounded-lg p-6 shadow-sm flex items-center justify-center overflow-x-auto">
-        <div class="flex items-end space-x-3 min-w-max">
-          <div class="flex flex-col items-center" *ngFor="let talla of tallasParaGrafico">
-            <div class="w-6 rounded-md mb-1"
-                 [ngClass]="talla.color"
-                 [style.height.px]="Math.max(talla.quantity * 8, 16)"></div>
-            <span class="text-xs font-semibold text-gray-900">{{ talla.size }}</span>
-            <span class="text-xs text-gray-600 mt-1">{{ talla.quantity }}</span>
-          </div>
-          <div *ngIf="tallasParaGrafico.length === 0" class="text-gray-500 text-sm">
-            No hay datos de tallas para el gráfico.
+      <div class="lg:col-span-6 bg-white rounded-lg p-6 shadow-sm flex flex-col">
+        <h2 class="text-sm font-semibold text-gray-900 mb-4">Distribución de Cantidad por Talla (Gráfico de Líneas)</h2>
+        <div class="relative flex-grow overflow-hidden">
+          <div class="absolute inset-0 flex">
+            <div class="flex flex-col-reverse justify-between text-[10px] text-gray-500 pr-2 py-1 w-8 text-right">
+              <span>{{ maxQuantityForChart | number:'1.0-0' }}</span>
+              <span>{{ (maxQuantityForChart / 2) | number:'1.0-0' }}</span>
+              <span>0</span>
+            </div>
+
+            <div class="flex-grow overflow-x-auto">
+              <div class="h-full pb-2" [style.min-width.px]="chartWidth">
+                <ng-container *ngIf="tallasParaGrafico.length > 0; else noChartData">
+                  <svg [attr.viewBox]="svgViewBox" preserveAspectRatio="none" class="w-full h-full">
+                    <line x1="0" [attr.y1]="svgHeight * 0.1" x2="100%" [attr.y2]="svgHeight * 0.1" stroke="#e5e7eb" stroke-width="0.5"></line>
+                    <line x1="0" [attr.y1]="svgHeight * 0.5" x2="100%" [attr.y2]="svgHeight * 0.5" stroke="#e5e7eb" stroke-width="0.5"></line>
+                    <line x1="0" [attr.y1]="svgHeight * 0.9" x2="100%" [attr.y2]="svgHeight * 0.9" stroke="#e5e7eb" stroke-width="0.5"></line>
+
+                    <polyline
+                      fill="none"
+                      stroke="#1a202c"
+                      stroke-width="2"
+                      [attr.points]="chartLinePoints"
+                    />
+
+                    <ng-container *ngFor="let talla of tallasParaGrafico; let i = index">
+                      <circle
+                        [attr.cx]="(i * (chartWidth / (tallasParaGrafico.length > 1 ? tallasParaGrafico.length - 1 : 1))) + (chartWidth / (tallasParaGrafico.length > 1 ? tallasParaGrafico.length - 1 : 1)) / 2"
+                        [attr.cy]="svgHeight - (talla.quantity / maxQuantityForChart) * svgHeight * 0.8"
+                        r="3"
+                        fill="#1a202c"
+                      />
+                      <text
+                        [attr.x]="(i * (chartWidth / (tallasParaGrafico.length > 1 ? tallasParaGrafico.length - 1 : 1))) + (chartWidth / (tallasParaGrafico.length > 1 ? tallasParaGrafico.length - 1 : 1)) / 2"
+                        [attr.y]="svgHeight - (talla.quantity / maxQuantityForChart) * svgHeight * 0.8 - 8"
+                        text-anchor="middle"
+                        font-size="10"
+                        fill="#374151"
+                        font-weight="bold"
+                      >
+                        {{ talla.quantity }}
+                      </text>
+                      <text
+                        [attr.x]="(i * (chartWidth / (tallasParaGrafico.length > 1 ? tallasParaGrafico.length - 1 : 1))) + (chartWidth / (tallasParaGrafico.length > 1 ? tallasParaGrafico.length - 1 : 1)) / 2"
+                        [attr.y]="svgHeight - 5"
+                        text-anchor="middle"
+                        font-size="10"
+                        fill="#4b5563"
+                      >
+                        {{ talla.size }}
+                      </text>
+                    </ng-container>
+                  </svg>
+                </ng-container>
+                <ng-template #noChartData>
+                  <div class="text-gray-500 text-sm w-full text-center py-8 flex items-center justify-center h-full">
+                    No hay datos de tallas para el gráfico.
+                  </div>
+                </ng-template>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <div class="lg:col-span-3">
         <form class="bg-white rounded-lg p-6 shadow-sm space-y-4">
           <div>
@@ -214,3 +263,4 @@
   (closeModal)="cerrarModal()"
   (productSaved)="onProductoGuardado($event)">
 </app-modal-almacen>
+

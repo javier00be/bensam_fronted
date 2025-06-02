@@ -61,6 +61,10 @@ export class AlmacenComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
+  // Dimensiones del SVG para el gráfico de líneas
+  svgWidth: number = 800; // Ancho base del SVG, se ajustará con overflow-x-auto
+  svgHeight: number = 200; // Altura fija del SVG
+
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
@@ -185,7 +189,7 @@ export class AlmacenComponent implements OnInit {
   // Puedes añadir más getters si quieres para tallas numéricas o específicas (ej: cantidadTotal2()): number { return this.getCantidadTotalPorTalla('2'); }
 
 
-  // Getter para los datos del gráfico de barras (dinámico para todas las tallas)
+  // Getter para los datos del gráfico de líneas (dinámico para todas las tallas)
   get tallasParaGrafico(): { size: string; quantity: number; color: string }[] {
     const tallasMap: { [key: string]: number } = {};
 
@@ -222,12 +226,56 @@ export class AlmacenComponent implements OnInit {
         case 'XL': color = 'bg-gray-300'; break;
         case 'XXL': color = 'bg-gray-200'; break;
         // Puedes añadir más casos para otras tallas numéricas o alfanuméricas
-        // case '2': color = 'bg-blue-500'; break;
       }
       return { size, quantity: tallasMap[size], color };
     });
 
     return sortedTallas;
+  }
+
+  // Getter para la cantidad máxima para escalar el gráfico
+  get maxQuantityForChart(): number {
+    let max = 0;
+    this.tallasParaGrafico.forEach(talla => {
+      if (talla.quantity > max) {
+        max = talla.quantity;
+      }
+    });
+    // Agrega un buffer para que la línea no toque el borde superior
+    return max > 0 ? max * 1.2 : 10;
+  }
+
+  // Getter para el ancho del gráfico SVG, ajusta para scroll horizontal
+  get chartWidth(): number {
+    const minWidthPerPoint = 60; // Minimum space per data point
+    return Math.max(this.svgWidth, this.tallasParaGrafico.length * minWidthPerPoint);
+  }
+
+  // Getter para los puntos de la polilínea SVG
+  get chartLinePoints(): string {
+    if (this.tallasParaGrafico.length === 0) {
+      return "";
+    }
+
+    // Define un padding vertical para que la línea no toque los bordes superior/inferior del SVG
+    const paddingY = this.svgHeight * 0.1; // 10% de padding en la parte superior e inferior
+    const effectiveHeight = this.svgHeight - (2 * paddingY); // Altura disponible para el gráfico
+
+    // Calcula el espaciado horizontal entre puntos
+    const xStep = this.chartWidth / (this.tallasParaGrafico.length > 1 ? this.tallasParaGrafico.length - 1 : 1);
+
+    return this.tallasParaGrafico.map((talla, i) => {
+      // Coordenada X: espaciado uniforme
+      const x = i * xStep;
+      // Coordenada Y: escalada inversamente (mayor cantidad = menor Y en SVG) y con padding
+      const y = this.svgHeight - (talla.quantity / this.maxQuantityForChart) * effectiveHeight - paddingY;
+      return `${x},${y}`;
+    }).join(" ");
+  }
+
+  // Getter para el viewBox del SVG
+  get svgViewBox(): string {
+    return `0 0 ${this.chartWidth} ${this.svgHeight}`;
   }
 
   get Math(): typeof Math {
