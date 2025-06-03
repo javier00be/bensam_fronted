@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalAlmacenComponent } from '../modal-almacen/modal-almacen.component';
 import { UserService } from '../../../../services/user.service';
+import { Router } from '@angular/router'; // Importa Router
 
 // Interfaz para un elemento de talla dentro del array 'tallas'
 export interface TallaItem {
@@ -65,7 +66,10 @@ export class AlmacenComponent implements OnInit {
   svgWidth: number = 800; // Ancho base del SVG, se ajustará con overflow-x-auto
   svgHeight: number = 200; // Altura fija del SVG
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private router: Router // Inyecta el Router
+  ) { }
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -328,5 +332,19 @@ export class AlmacenComponent implements OnInit {
     this.disenoFiltro = '';
     this.telaFiltro = '';
     this.terminoBusqueda = '';
+  }
+
+  // Nuevo método para navegar a la página de producto con los datos
+  agregarProducto(): void {
+    console.log('Botón Agregar Producto clickeado. Intentando navegar a /admin/producto...');
+    this.router.navigate(['/admin/producto'], { // Asegúrate de que esta sea la ruta correcta a tu ProductoComponent
+      queryParams: {
+        modelo: this.modeloFiltro,
+        diseno: this.disenoFiltro,
+        tela: this.telaFiltro,
+        cantidadTotal: this.cantidadTotalInventario, // Pasa la cantidad total del inventario
+        tallas: JSON.stringify(this.tallasParaGrafico) // Pasa las tallas para el gráfico como string
+      }
+    });
   }
 }

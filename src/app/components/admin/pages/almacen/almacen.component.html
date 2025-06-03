@@ -39,7 +39,7 @@
 
         <button
           type="button"
-          class="w-full bg-black text-white text-xs font-semibold rounded px-4 py-2 hover:bg-gray-900 transition mt-3">
+          (click)="agregarProducto()" class="w-full bg-black text-white text-xs font-semibold rounded px-4 py-2 hover:bg-gray-900 transition mt-3">
           Agregar Producto
         </button>
       </div>
@@ -263,4 +263,3 @@
   (closeModal)="cerrarModal()"
   (productSaved)="onProductoGuardado($event)">
 </app-modal-almacen>
-

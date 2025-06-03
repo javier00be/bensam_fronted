@@ -1,37 +1,125 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalImagenComponent } from '../modal-imagen/modal-imagen.component';
 import { FormsModule } from '@angular/forms';
-// Importa el componente del modal
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+// Re-exporta la interfaz TallaItem si no está ya disponible globalmente
+export interface TallaItem {
+  size: string;
+  quantity: number;
+  _id?: string;
+  color?: string; // Añadido para compatibilidad con tallasParaGrafico
+}
+
 @Component({
   selector: 'app-producto',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    ModalImagenComponent, // <-- Añade el componente modal aquí
+    ModalImagenComponent,
   ],
   templateUrl: './producto.component.html',
+  styleUrls: ['./producto.component.css']
 })
-export class ProductoComponent {
-  // Aquí irá la lógica para manejar productos
-  isUploadModalOpen = false; // Variable para controlar la visibilidad del modal
+export class ProductoComponent implements OnInit, OnDestroy {
 
-  // Propiedad para la tonalidad seleccionada
-  selectedTonalidadColor: string = '#9f2f31'; // Inicializa con el color actual (vino)
+  isUploadModalOpen = false;
+  selectedTonalidadColor: string = '#9f2f31';
 
-  // ... otras propiedades y métodos de tu componente ...
-  // Nuevas propiedades para la gestión de imágenes
-  productImages: string[] = []; // Array para almacenar las URLs de las imágenes
-  currentImageUrl: string | null = null; // URL de la imagen actualmente visible
-  activeImageIndex: number = 0; // Índice de la imagen activa para los indicadores
+  productImages: string[] = [];
+  currentImageUrl: string | null = null;
+  activeImageIndex: number = 0;
 
-  // Método para abrir el modal de subida
+  nombreProducto: string = '';
+  modelo: string = '';
+  diseno: string = '';
+  tela: string = '';
+  cantidadTotalGeneral: number = 0; // Cantidad total del inventario (pasada desde Almacen)
+
+  // Nuevas propiedades para manejar las tallas y la cantidad seleccionada
+  productTallas: TallaItem[] = []; // Array de tallas para este producto
+  selectedTalla: TallaItem | null = null; // La talla actualmente seleccionada
+  displayQuantity: number = 0; // La cantidad que se mostrará (total o por talla)
+
+  precio: string = '';
+  categoria: string = '';
+  descripcion: string = '';
+
+  private queryParamsSubscription: Subscription | undefined;
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
+      this.modelo = params['modelo'] || '';
+      this.diseno = params['diseno'] || '';
+      this.tela = params['tela'] || '';
+      this.cantidadTotalGeneral = +params['cantidadTotal'] || 0; // Cantidad total del inventario
+
+      // Parsear el array de tallas si está presente
+      if (params['tallas']) {
+        try {
+          this.productTallas = JSON.parse(params['tallas']);
+          // Ordenar las tallas para una visualización consistente
+          const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2', '4', '6', '8', '10', '12', '14', '16'];
+          this.productTallas.sort((a, b) => {
+            const indexA = order.indexOf(a.size.toUpperCase());
+            const indexB = order.indexOf(b.size.toUpperCase());
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            return a.size.localeCompare(b.size);
+          });
+
+          // Establecer la primera talla como seleccionada por defecto si hay tallas
+          if (this.productTallas.length > 0) {
+            this.selectTalla(this.productTallas[0]);
+          }
+        } catch (e) {
+          console.error('Error al parsear las tallas:', e);
+          this.productTallas = [];
+        }
+      } else {
+        this.productTallas = [];
+      }
+
+      // Inicializar la cantidad a mostrar con la cantidad total general
+      this.displayQuantity = this.cantidadTotalGeneral;
+
+      this.nombreProducto = `${this.modelo} ${this.diseno} ${this.tela}`.trim();
+      console.log('ProductoComponent inicializado con query params:', {
+        modelo: this.modelo,
+        diseno: this.diseno,
+        tela: this.tela,
+        cantidadTotalGeneral: this.cantidadTotalGeneral,
+        productTallas: this.productTallas
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.queryParamsSubscription) {
+      this.queryParamsSubscription.unsubscribe();
+    }
+    this.productImages.forEach((url) => {
+      // Si usas URL.createObjectURL, revócalo aquí: URL.revokeObjectURL(url);
+    });
+  }
+
+  // Método para seleccionar una talla y actualizar la cantidad mostrada
+  selectTalla(talla: TallaItem): void {
+    this.selectedTalla = talla;
+    this.displayQuantity = talla.quantity;
+    console.log(`Talla seleccionada: ${talla.size}, Cantidad: ${talla.quantity}`);
+  }
+
   openUploadModal(): void {
     this.isUploadModalOpen = true;
   }
 
-  // Método para cerrar el modal de subida (llamado por el modal a través del evento)
   closeUploadModal(): void {
     this.isUploadModalOpen = false;
   }
@@ -39,36 +127,28 @@ export class ProductoComponent {
   handleSelectedFiles(files: File[]): void {
     console.log('Archivos recibidos en el componente principal:', files);
 
-    // Limpiamos las URLs de previsualización anteriores para evitar duplicados si se selecciona un nuevo set
-    // Si quieres permitir añadir más imágenes sin borrar las anteriores, modifica esta lógica.
     this.productImages = [];
     this.currentImageUrl = null;
     this.activeImageIndex = 0;
 
-    // Generar URLs temporales para previsualización en el cliente
-    // ¡IMPORTANTE! En un entorno de producción, aquí subirías los 'files' a un servidor
-    // y recibirías las URLs permanentes para almacenarlas en 'productImages'.
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
           this.productImages.push(e.target.result as string);
-          // Si es la primera imagen o si no hay ninguna imagen actual, la establecemos
           if (!this.currentImageUrl) {
             this.currentImageUrl = this.productImages[0];
           }
         }
       };
-      reader.readAsDataURL(file); // Lee el archivo como una URL de datos (base64)
+      reader.readAsDataURL(file);
     });
 
-    // Si no se seleccionó ningún archivo, asegúrate de que no haya imagen actual
     if (files.length === 0) {
       this.currentImageUrl = null;
     }
   }
 
-  // Método para cambiar la imagen activa cuando se hace clic en un indicador
   setActiveImage(index: number): void {
     if (index >= 0 && index < this.productImages.length) {
       this.activeImageIndex = index;
@@ -76,13 +156,20 @@ export class ProductoComponent {
     }
   }
 
-  // Limpiar URLs temporales al destruir el componente para evitar fugas de memoria
-  ngOnDestroy(): void {
-    this.productImages.forEach((url) => {
-      // Solo revocar si son URLs de objeto (creadas con URL.createObjectURL)
-      // Las Data URLs (base64) no necesitan ser revocadas.
-      // Si en producción usas URL.createObjectURL, asegúrate de revocarlo.
-      // Si usas Data URLs o URLs de servidor, no es necesario.
+  guardarProducto(): void {
+    console.log('Guardando producto con los siguientes datos:', {
+      nombre: this.nombreProducto,
+      modelo: this.modelo,
+      diseno: this.diseno,
+      tela: this.tela,
+      cantidadTotalGeneral: this.cantidadTotalGeneral, // Puedes guardar la cantidad total general
+      tallas: this.productTallas, // Y el array de tallas
+      precio: this.precio,
+      categoria: this.categoria,
+      descripcion: this.descripcion,
+      tonalidadColor: this.selectedTonalidadColor,
+      images: this.productImages
     });
+    // Implementa tu lógica de guardado real aquí (ej. llamar a un servicio).
   }
 }

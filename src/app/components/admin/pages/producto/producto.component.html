@@ -18,27 +18,28 @@
               class="w-full rounded-lg border border-gray-300 py-2 px-4 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
               id="nombre"
               type="text"
-              value="terno vino"
+              [(ngModel)]="nombreProducto"
+              name="nombreProducto"
             />
           </div>
 
           <!-- Product Specs Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
             <div class="text-sm text-gray-700">
-              <span class="font-medium">Modelo:</span> Clásico
+              <span class="font-medium">Modelo:</span> {{ modelo }}
             </div>
             <div class="text-sm text-gray-700">
-              <span class="font-medium">Diseño:</span> Machete
+              <span class="font-medium">Diseño:</span> {{ diseno }}
             </div>
             <div class="text-sm text-gray-700">
-              <span class="font-medium">Tela:</span> D54E65
+              <span class="font-medium">Tela:</span> {{ tela }}
             </div>
           </div>
 
           <!-- Quantity and Color -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
             <div class="text-sm text-gray-700">
-              <span class="font-medium">Cantidad Total:</span> 15
+              <span class="font-medium">Cantidad Total del Inventario:</span> {{ cantidadTotalGeneral }}
             </div>
             <div class="flex items-center gap-3">
               <label for="tonalidad-color" class="text-sm font-medium text-gray-700">
@@ -49,44 +50,42 @@
                 id="tonalidad-color"
                 class="w-10 h-8 rounded-md border border-gray-300 cursor-pointer"
                 [(ngModel)]="selectedTonalidadColor"
+                name="tonalidadColor"
               />
             </div>
           </div>
 
-          <!-- Size Selection -->
+          <!-- Size Selection - Actualizado para mostrar botones dinámicos -->
           <div>
             <p class="text-sm font-bold text-gray-900 mb-3">Talla</p>
             <div class="flex flex-wrap gap-2">
-              <button
-                class="bg-black text-white text-sm font-medium rounded-md px-4 py-2 hover:bg-gray-800 transition"
-                type="button"
-              >
-                S
-              </button>
-              <button
-                class="bg-gray-400 text-white text-sm font-medium rounded-md px-4 py-2 hover:bg-gray-500 transition"
-                type="button"
-              >
-                M
-              </button>
-              <button
-                class="bg-gray-400 text-white text-sm font-medium rounded-md px-4 py-2 hover:bg-gray-500 transition"
-                type="button"
-              >
-                L
-              </button>
+              <ng-container *ngIf="productTallas.length > 0; else noTallasAvailable">
+                <button
+                  *ngFor="let talla of productTallas"
+                  type="button"
+                  (click)="selectTalla(talla)"
+                  [class.bg-black]="selectedTalla?.size === talla.size"
+                  [class.bg-gray-400]="selectedTalla?.size !== talla.size"
+                  class="text-white text-sm font-medium rounded-md px-4 py-2 hover:bg-gray-800 transition"
+                >
+                  {{ talla.size }}
+                </button>
+              </ng-container>
+              <ng-template #noTallasAvailable>
+                <p class="text-sm text-gray-500">No hay tallas disponibles.</p>
+              </ng-template>
             </div>
           </div>
 
-          <!-- Quantity Display -->
+          <!-- Quantity Display - Ahora muestra la cantidad de la talla seleccionada -->
           <div class="p-3 bg-blue-50 rounded-lg">
             <p class="text-sm text-gray-700">
-              <span class="font-medium">Cantidad:</span> 7 productos
+              <span class="font-medium">Cantidad de la talla {{ selectedTalla?.size || 'seleccionada' }}:</span> {{ displayQuantity }} productos
             </p>
           </div>
 
           <!-- Form Section -->
-          <form class="space-y-6">
+          <form class="space-y-6" (ngSubmit)="guardarProducto()">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Price -->
               <div>
@@ -97,7 +96,8 @@
                   class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                   id="precio"
                   type="text"
-                  value="s/.250"
+                  [(ngModel)]="precio"
+                  name="precio"
                 />
               </div>
 
@@ -109,8 +109,10 @@
                 <select
                   class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                   id="categoria"
+                  [(ngModel)]="categoria"
+                  name="categoria"
                 >
-                  <option disabled selected>Seleccione</option>
+                  <option disabled selected value="">Seleccione</option>
                   <option>Categoría 1</option>
                   <option>Categoría 2</option>
                 </select>
@@ -127,7 +129,22 @@
                 id="descripcion"
                 rows="6"
                 placeholder="Ingrese la descripción del producto..."
+                [(ngModel)]="descripcion"
+                name="descripcion"
               ></textarea>
+            </div>
+
+            <!-- Save Button - Moved inside the form to enable (ngSubmit) -->
+            <div class="flex justify-center sm:justify-end mt-8 pt-6 border-t border-gray-200">
+              <button
+                class="w-full sm:w-auto bg-gray-900 text-white text-sm font-medium rounded-lg py-3 px-8 hover:bg-black transition-colors"
+                type="submit"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline mr-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                Guardar Producto
+              </button>
             </div>
           </form>
         </div>
@@ -201,19 +218,6 @@
             {{ activeImageIndex + 1 }} de {{ productImages.length }}
           </div>
         </div>
-      </div>
-
-      <!-- Save Button -->
-      <div class="flex justify-center sm:justify-end mt-8 pt-6 border-t border-gray-200">
-        <button
-          class="w-full sm:w-auto bg-gray-900 text-white text-sm font-medium rounded-lg py-3 px-8 hover:bg-black transition-colors"
-          type="submit"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline mr-2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-          Guardar Producto
-        </button>
       </div>
     </div>
   </div>
