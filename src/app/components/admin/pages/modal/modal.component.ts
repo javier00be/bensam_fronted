@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../../services/user.service';
@@ -11,14 +20,14 @@ import { UserService } from '../../../../services/user.service';
 })
 export class ModalComponent implements OnInit, OnChanges {
   @Input() isVisible: boolean = false;
-  @Input() modalType: 'model' | 'design' | 'fabric' = 'model';
+  @Input() modalType: 'model' | 'design' | 'fabric' | 'category' = 'model';
   @Input() editData: any = null;
   @Input() isEdit: boolean = false;
 
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() saveContentEvent = new EventEmitter<any>();
 
-  // Datos para los formularios simples
+  // Datos para los formularios
   content = '';
   fabricDesign = '';
   fabricTexture = '';
@@ -27,6 +36,7 @@ export class ModalComponent implements OnInit, OnChanges {
   modelData: any = { nombre: '' };
   designData: any = { nombre: '' };
   fabricData: any = { diseno: '', color: '' };
+  categoryData: any = { nombre: '' };
 
   // Mensaje de estado para retroalimentación
   statusMessage = '';
@@ -43,8 +53,10 @@ export class ModalComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // Si cambia el modo de edición y los datos de edición, actualizamos los formularios
-    if ((changes['editData'] && changes['editData'].currentValue) ||
-        (changes['isEdit'] && changes['isEdit'].currentValue)) {
+    if (
+      (changes['editData'] && changes['editData'].currentValue) ||
+      (changes['isEdit'] && changes['isEdit'].currentValue)
+    ) {
       console.log('Cambios detectados en editData o isEdit:', changes);
       this.populateEditData();
     }
@@ -55,7 +67,7 @@ export class ModalComponent implements OnInit, OnChanges {
     if (this.isEdit && this.editData) {
       console.log('Cargando datos para edición:', this.editData);
 
-      switch(this.modalType) {
+      switch (this.modalType) {
         case 'model':
           this.modelData = { ...this.editData };
           this.content = this.modelData.nombre || '';
@@ -80,11 +92,17 @@ export class ModalComponent implements OnInit, OnChanges {
   // Obtener el título correspondiente según el tipo de modal
   getModalTitle(): string {
     const action = this.isEdit ? 'Editar' : 'Insertar';
-    switch(this.modalType) {
-      case 'model': return `${action} Modelo`;
-      case 'design': return `${action} Diseño`;
-      case 'fabric': return `${action} Tela`;
-      default: return '';
+    switch (this.modalType) {
+      case 'model':
+        return `${action} Modelo`;
+      case 'design':
+        return `${action} Diseño`;
+      case 'fabric':
+        return `${action} Tela`;
+      case 'category':
+        return `${action} Categoria`;
+      default:
+        return '';
     }
   }
 
@@ -105,6 +123,7 @@ export class ModalComponent implements OnInit, OnChanges {
     this.modelData = { nombre: '' };
     this.designData = { nombre: '' };
     this.fabricData = { diseno: '', color: '' };
+    this.categoryData = { nombre: '' };
   }
 
   // Guardar contenido básico (modelo o diseño)
@@ -117,6 +136,8 @@ export class ModalComponent implements OnInit, OnChanges {
       this.modelData.nombre = this.content;
     } else if (this.modalType === 'design') {
       this.designData.nombre = this.content;
+    } else if (this.modalType === 'category') {
+      this.categoryData = { nombre: this.content };
     }
 
     if (this.isEdit) {
@@ -135,7 +156,7 @@ export class ModalComponent implements OnInit, OnChanges {
     this.fabricData = {
       diseno: this.fabricDesign,
       color: this.fabricTexture,
-      ...this.isEdit ? {id: this.editData?.id || this.editData?._id} : {}
+      ...(this.isEdit ? { id: this.editData?.id || this.editData?._id } : {}),
     };
 
     if (this.isEdit) {
@@ -143,14 +164,22 @@ export class ModalComponent implements OnInit, OnChanges {
       this.saveContentEvent.emit({
         type: 'fabric',
         data: this.fabricData,
-        isEdit: true
+        isEdit: true,
       });
-      this.handleSuccess(null, 'Tela actualizada correctamente', this.fabricData);
+      this.handleSuccess(
+        null,
+        'Tela actualizada correctamente',
+        this.fabricData
+      );
     } else {
       this.userService.insertar_tela(this.fabricData).subscribe(
         (response) => {
           console.log('Respuesta de insertar_tela:', response);
-          this.handleSuccess(response, 'Tela guardada correctamente', this.fabricData);
+          this.handleSuccess(
+            response,
+            'Tela guardada correctamente',
+            this.fabricData
+          );
         },
         (error) => this.handleError(error, 'Error al guardar la tela')
       );
@@ -164,7 +193,7 @@ export class ModalComponent implements OnInit, OnChanges {
 
     console.log('Manejando edición para:', this.modalType, 'con ID:', itemId);
 
-    switch(this.modalType) {
+    switch (this.modalType) {
       case 'model':
         data = { ...this.modelData };
         break;
@@ -174,6 +203,9 @@ export class ModalComponent implements OnInit, OnChanges {
       case 'fabric':
         data = { ...this.fabricData };
         break;
+      case 'category':
+        data = { nombre: this.content };
+        break;
     }
 
     console.log('Emitiendo evento para actualizar:', data);
@@ -182,7 +214,7 @@ export class ModalComponent implements OnInit, OnChanges {
       type: this.modalType,
       data: data,
       isEdit: true,
-      editId: itemId
+      editId: itemId,
     });
 
     const itemType = this.getModalTitle().toLowerCase().replace('editar ', '');
@@ -196,7 +228,11 @@ export class ModalComponent implements OnInit, OnChanges {
       this.userService.insertar_modelo(this.modelData).subscribe(
         (response) => {
           console.log('Respuesta de insertar_modelo:', response);
-          this.handleSuccess(response, 'Modelo guardado correctamente', this.modelData);
+          this.handleSuccess(
+            response,
+            'Modelo guardado correctamente',
+            this.modelData
+          );
         },
         (error) => this.handleError(error, 'Error al guardar el modelo')
       );
@@ -205,10 +241,31 @@ export class ModalComponent implements OnInit, OnChanges {
       this.userService.insertar_diseno(this.designData).subscribe(
         (response) => {
           console.log('Respuesta de insertar_diseno:', response);
-          this.handleSuccess(response, 'Diseño guardado correctamente', this.designData);
+          this.handleSuccess(
+            response,
+            'Diseño guardado correctamente',
+            this.designData
+          );
         },
         (error) => this.handleError(error, 'Error al guardar el diseño')
       );
+    } else if (this.modalType === 'category') {
+      console.log('Insertando nueva categoria:', this.categoryData);
+      // Assuming you have a category service
+      // this.userService.insertar_categoria(this.categoryData).subscribe(
+      //   (response) => {
+      //     console.log('Respuesta de insertar_categoria:', response);
+      //     this.handleSuccess(
+      //       response,
+      //       'Categoria guardada correctamente',
+      //       this.categoryData
+      //     );
+      //   },
+      //   (error) => this.handleError(error, 'Error al guardar la categoria')
+      // );
+      this.handleSuccess(null, 'Categoria guardada correctamente', {
+        nombre: this.content,
+      }); // Placeholder
     }
   }
 

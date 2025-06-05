@@ -1,11 +1,39 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '../modal/modal.component';
-import { UserService } from '../../../../services/user.service';
-import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { forkJoin } from 'rxjs';
+import { ModalComponent } from '../modal/modal.component'; // Asegúrate que la ruta sea correcta
+import { UserService } from '../../../../services/user.service'; // Asegúrate que la ruta sea correcta
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component'; // Asegúrate que la ruta sea correcta
+import { forkJoin, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
+
+// Define interfaces para una mejor seguridad de tipos
+interface Model {
+  _id?: string;
+  id?: string; // Para compatibilidad si el backend usa 'id' en lugar de '_id'
+  nombre: string;
+  createdAt: string | Date;
+  // Añade otras propiedades específicas del modelo aquí
+}
+
+interface Design {
+  _id?: string;
+  id?: string;
+  nombre?: string; // Usado como fallback en tu plantilla
+  design?: string; // Asumo que es la propiedad principal del nombre
+  createdAt: string | Date;
+  // Añade otras propiedades específicas del diseño aquí
+}
+
+interface Fabric {
+  _id?: string;
+  id?: string;
+  diseno: string; // Nombre del diseño/tipo de tela
+  color: string;
+  createdAt: string | Date;
+  // Añade otras propiedades específicas de la tela aquí
+}
 
 @Component({
   selector: 'app-material',
@@ -14,82 +42,106 @@ import { forkJoin } from 'rxjs';
     CommonModule,
     FormsModule,
     ModalComponent,
-    HttpClientModule,
+    HttpClientModule, // Para componentes standalone, considera usar provideHttpClient() en la configuración de la app o en los providers del componente
     ConfirmationModalComponent,
   ],
   providers: [UserService],
   templateUrl: './material.component.html',
   styleUrls: ['./material.component.css'],
 })
-export class MaterialComponent implements OnInit {
+export class MaterialComponent implements OnInit, OnDestroy {
+  // --- Variables de Estado ---
+  activeTab: 'models' | 'designs' | 'fabrics' | 'categories' = 'models'; // Inicializa activeTab
+
+  // Arrays de datos con tipos
+  models: Model[] = [];
+  designs: Design[] = [];
+  fabrics: Fabric[] = [];
+  categories: any[] = [];
+
+  // Visibilidad de modales
+  showModal: boolean = false;
+  showConfirmationModal: boolean = false;
+
+  // Para modal de añadir/editar
+  currentModalType: 'model' | 'design' | 'fabric' | 'category' = 'model';
+  isEditMode: boolean = false;
+  currentEditId: string = '';
+  currentItemData: Model | Design | Fabric | any | null = null;
+
+  // Para modal de confirmación
+  itemToDelete: {
+    type: 'model' | 'design' | 'fabric' | 'category';
+    id: string;
+    name?: string;
+  } | null = null;
+
+  // Estados de carga y error
+  isLoading: boolean = false;
+  errorMessage: string | null = null;
+  isSubmitting: boolean = false; // Para operaciones de guardado/eliminación en modales
+
+  private destroy$ = new Subject<void>(); // Para desuscribirse de observables
+
   constructor(
     private userService: UserService,
-    private cdr: ChangeDetectorRef // Inyectamos ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.loadInitialData();
   }
 
-loadInitialData() {
-  forkJoin({
-    modelos: this.userService.obtener_modelo(),
-    disenos: this.userService.obtener_diseno(),
-    telas: this.userService.obtener_telas()
-  }).subscribe(({ modelos, disenos, telas }) => {
-    this.models = [...modelos];
-    this.designs = [...disenos];
-    this.fabrics = [...telas];
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-    console.log('Datos recargados:');
-    console.log('Modelos:', this.models);
-    console.log('Diseños:', this.designs);
-    console.log('Telas:', this.fabrics);
+  loadInitialData() {
+    this.isLoading = true;
+    this.errorMessage = null;
+    forkJoin({
+      modelos: this.userService.obtener_modelo(),
+      disenos: this.userService.obtener_diseno(),
+      telas: this.userService.obtener_telas(),
+    })
+      .pipe(
+        takeUntil(this.destroy$), // Desuscribirse cuando el componente se destruya
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges(); // Asegura la actualización de la UI cuando la carga finaliza
+        })
+      )
+      .subscribe({
+        next: ({ modelos, disenos, telas }) => {
+          this.models = [...(modelos || [])] as Model[];
+          this.designs = [...(disenos || [])] as Design[];
+          this.fabrics = [...(telas || [])] as Fabric[];
+          console.log('Datos iniciales cargados/recargados.');
+        },
+        error: (err) => {
+          console.error('Error al cargar datos iniciales:', err);
+          this.errorMessage =
+            'Error al cargar los datos. Por favor, intente de nuevo más tarde.';
+        },
+      });
+  }
 
-    this.cdr.detectChanges(); // Solo una vez, después de actualizar todo
-  });
-}
+  // Método para obtener el ID correcto (MongoDB podría usar _id)
+  getMongoId(item: any): string {
+    return item?._id || item?.id || '';
+  }
 
-  // Variable para controlar la visibilidad del modal
-  showModal: boolean = false;
-
-  // Variable para controlar la visibilidad del modal de confirmación
-  showConfirmationModal: boolean = false;
-
-  // Variable para almacenar el elemento a eliminar
-  itemToDelete: {
-    type: 'model' | 'design' | 'fabric';
-    id: string;
-    name?: string;
-  } | null = null;
-
-  // Variable para controlar el tipo de modal actual
-  currentModalType: 'model' | 'design' | 'fabric' = 'model';
-
-  // Variables para almacenar los contenidos guardados
-  models: any[] = [];
-  designs: any[] = [];
-  fabrics: any[] = [];
-
-  // Variable para controlar si estamos en modo edición
-  isEditMode: boolean = false;
-
-  // Variable para guardar el ID del elemento a editar
-  currentEditId: string = '';
-
-  // Variable para guardar los datos del elemento a editar
-  currentItemData: any = null;
-
-  // Método para abrir el modal según el tipo
-  openModal(type: 'model' | 'design' | 'fabric') {
+  // --- Manejo de Modales ---
+  openModal(type: 'model' | 'design' | 'fabric' | 'category') {
     this.currentModalType = type;
-    this.showModal = true;
     this.isEditMode = false;
     this.currentItemData = null;
     this.currentEditId = '';
+    this.errorMessage = null; // Limpiar errores previos al abrir modal
+    this.showModal = true;
   }
 
-  // Método para cerrar el modal
   closeModal() {
     this.showModal = false;
     this.isEditMode = false;
@@ -97,331 +149,347 @@ loadInitialData() {
     this.currentEditId = '';
   }
 
-  // Método para conseguir el ID correcto de MongoDB (puede ser _id o id)
-  getMongoId(item: any): string {
-    // MongoDB podría devolver el ID como _id o id dependiendo de cómo esté configurado el backend
-    return item._id || item.id;
-  }
-
-  // Método para editar un elemento
-  editItem(type: 'model' | 'design' | 'fabric', item: any) {
+  // --- Editar Elemento ---
+  editItem(
+    type: 'model' | 'design' | 'fabric' | 'category',
+    item: Model | Design | Fabric | any
+  ) {
     this.isEditMode = true;
     this.currentModalType = type;
-
-    // Asegúrate de obtener el ID correcto (puede ser _id en MongoDB)
     this.currentEditId = this.getMongoId(item);
+    this.currentItemData = { ...item }; // Clonar para evitar mutación directa
+    this.errorMessage = null;
 
-    // Clonamos el objeto para evitar referencias directas
-    this.currentItemData = { ...item };
-
-    // Verificamos que tengamos el id correcto
+    if (!this.currentEditId) {
+      console.error(`No se pudo obtener el ID para editar el ${type}`, item);
+      this.errorMessage = `No se pudo obtener el ID para editar. Intente de nuevo.`;
+      this.cdr.detectChanges();
+      return;
+    }
     console.log(`Editando ${type} con ID: ${this.currentEditId}`);
-
-    // Abre el modal con los datos cargados
     this.showModal = true;
   }
 
-  // Método para iniciar la confirmación de eliminación de un elemento
-  confirmDeleteItem(type: 'model' | 'design' | 'fabric', item: any) {
-    // Obtener el ID correcto del elemento
+  // --- Eliminar Elemento ---
+  confirmDeleteItem(
+    type: 'model' | 'design' | 'fabric' | 'category',
+    item: Model | Design | Fabric | any
+  ) {
     const id = this.getMongoId(item);
+    this.errorMessage = null;
 
     if (!id) {
-      console.error(`No se pudo obtener el ID del ${type}`, item);
+      console.error(
+        `No se pudo obtener el ID del ${type} para eliminar.`,
+        item
+      );
+      this.errorMessage = `No se pudo obtener el ID para eliminar. Intente de nuevo.`;
+      this.cdr.detectChanges();
       return;
     }
 
-    let itemName = '';
-
-    // Obtener el nombre del elemento para mostrar en el modal
+    let itemName = 'este elemento';
     if (type === 'model') {
-      itemName = item ? item.nombre : 'este modelo';
+      itemName = (item as Model).nombre || 'este modelo';
     } else if (type === 'design') {
-      itemName = item ? item.design || item.nombre : 'este diseño';
+      itemName =
+        (item as Design).design || (item as Design).nombre || 'este diseño';
     } else if (type === 'fabric') {
-      itemName = item ? `${item.diseno} - ${item.color}` : 'esta tela';
+      itemName =
+        `${(item as Fabric).diseno} - ${(item as Fabric).color}` || 'esta tela';
+    } else if (type === 'category') {
+      itemName = (item as any).nombre || 'esta categoria';
     }
-
-    console.log(
-      `Confirmando eliminación de ${type} con ID: ${id}, Nombre: ${itemName}`
-    );
 
     this.itemToDelete = { type, id, name: itemName };
     this.showConfirmationModal = true;
   }
 
-  // Método para manejar la respuesta del modal de confirmación
   handleConfirmation(confirmed: boolean) {
     this.showConfirmationModal = false;
-
     if (confirmed && this.itemToDelete) {
-      console.log(
-        `Eliminando ${this.itemToDelete.type} con ID: ${this.itemToDelete.id}`
-      );
       this.deleteItem(this.itemToDelete.type, this.itemToDelete.id);
     }
-
     this.itemToDelete = null;
   }
 
-  // Método para eliminar un elemento
-  deleteItem(type: 'model' | 'design' | 'fabric', id: string) {
+  deleteItem(type: 'model' | 'design' | 'fabric' | 'category', id: string) {
     if (!id) {
       console.error(`ID no válido para eliminar ${type}`);
+      this.errorMessage = `ID no válido para eliminar.`;
+      this.cdr.detectChanges();
       return;
     }
 
+    this.isSubmitting = true;
+    this.errorMessage = null;
+    let deleteObservable;
+
     switch (type) {
       case 'model':
-        this.userService.eliminar_modelo(id).subscribe(
-          () => {
+        deleteObservable = this.userService.eliminar_modelo(id);
+        break;
+      case 'design':
+        deleteObservable = this.userService.eliminar_diseno(id);
+        break;
+      case 'fabric':
+        deleteObservable = this.userService.eliminar_tela(id);
+        break;
+      case 'category':
+        // Assuming you have a delete category service
+        // deleteObservable = this.userService.eliminar_categoria(id);
+        deleteObservable = new Subject().asObservable(); // Placeholder
+        break;
+      default:
+        this.isSubmitting = false;
+        console.error('Tipo de item desconocido para eliminar:', type);
+        this.errorMessage = 'Tipo de item desconocido.';
+        this.cdr.detectChanges();
+        return;
+    }
+
+    deleteObservable
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => {
+          console.log(`${type} con ID ${id} eliminado correctamente`);
+          if (type === 'model') {
             this.models = this.models.filter(
               (model) => this.getMongoId(model) !== id
             );
-            console.log('Modelo eliminado correctamente');
-            this.cdr.detectChanges(); // Forzar detección de cambios
-          },
-          (error) => {
-            console.error('Error al eliminar el modelo:', error);
-          }
-        );
-        break;
-      case 'design':
-        this.userService.eliminar_diseno(id).subscribe(
-          () => {
+          } else if (type === 'design') {
             this.designs = this.designs.filter(
               (design) => this.getMongoId(design) !== id
             );
-            console.log('Diseño eliminado correctamente');
-            this.cdr.detectChanges(); // Forzar detección de cambios
-          },
-          (error) => {
-            console.error('Error al eliminar el diseño:', error);
-          }
-        );
-        break;
-      case 'fabric':
-        this.userService.eliminar_tela(id).subscribe(
-          () => {
+          } else if (type === 'fabric') {
             this.fabrics = this.fabrics.filter(
               (fabric) => this.getMongoId(fabric) !== id
             );
-            console.log('Tela eliminada correctamente');
-            this.cdr.detectChanges(); // Forzar detección de cambios
-          },
-          (error) => {
-            console.error('Error al eliminar la tela:', error);
+          } else if (type === 'category') {
+            this.categories = this.categories.filter(
+              (category) => this.getMongoId(category) !== id
+            );
           }
-        );
-        break;
-    }
+        },
+        error: (error: any) => {
+          console.error(`Error al eliminar el ${type} con ID ${id}:`, error);
+          this.errorMessage = `Error al eliminar ${
+            this.itemToDelete?.name || type
+          }. Por favor, intente de nuevo.`;
+        },
+      });
   }
 
-  // Método para manejar el contenido guardado desde el modal
+  // --- Guardar/Actualizar Contenido desde Modal ---
   handleSavedContent(event: {
-    type: string;
-    data: any;
-    response?: any;
-    isEdit?: boolean;
-    editId?: string;
+    type: 'model' | 'design' | 'fabric' | 'category';
+    data: any; // Debería ser Model, Design, o Fabric (sin id para nuevo, con para editar)
   }) {
-    console.log('Recibido evento de guardado:', event);
+    this.isSubmitting = true;
+    this.errorMessage = null;
+    let saveObservable;
 
-    // Si es una edición
     if (this.isEditMode && this.currentEditId) {
-      const updatedData = event.data;
-
+      // --- Actualizar elemento existente ---
+      const updateData = event.data;
+      console.log(
+        `Actualizando ${event.type} con ID ${this.currentEditId}:`,
+        updateData
+      );
       switch (event.type) {
         case 'model':
-          this.userService
-            .actualizar_modelo(this.currentEditId, updatedData)
-            .subscribe(
-              (response) => {
-                console.log(
-                  'Respuesta del servidor al actualizar modelo:',
-                  response
-                );
-
-                // Buscar el índice del modelo en el arreglo
-                const index = this.models.findIndex(
-                  (model) => this.getMongoId(model) === this.currentEditId
-                );
-
-                if (index !== -1) {
-                  // Actualizar el modelo con la respuesta del servidor o con los datos actualizados
-                  const updatedModel = response || {
-                    ...this.models[index],
-                    ...updatedData,
-                  };
-                  console.log(
-                    'Actualizando modelo en índice',
-                    index,
-                    'con:',
-                    updatedModel
-                  );
-
-                  // Crear un nuevo arreglo para forzar la detección de cambios
-                  const newModels = [...this.models];
-                  newModels[index] = updatedModel;
-                  this.models = newModels;
-
-                  console.log('Arreglo de modelos actualizado:', this.models);
-                  this.cdr.markForCheck();
-                  this.cdr.detectChanges();
-                }
-              },
-              (error) => {
-                console.error('Error al actualizar el modelo:', error);
-              }
-            );
-          break;
-
-        case 'design':
-          this.userService
-            .actualizar_diseno(this.currentEditId, updatedData)
-            .subscribe(
-              (response) => {
-                console.log(
-                  'Respuesta del servidor al actualizar diseño:',
-                  response
-                );
-
-                // Buscar el índice del diseño en el arreglo
-                const index = this.designs.findIndex(
-                  (design) => this.getMongoId(design) === this.currentEditId
-                );
-
-                if (index !== -1) {
-                  // Actualizar el diseño con la respuesta del servidor o con los datos actualizados
-                  const updatedDesign = response || {
-                    ...this.designs[index],
-                    ...updatedData,
-                  };
-                  console.log(
-                    'Actualizando diseño en índice',
-                    index,
-                    'con:',
-                    updatedDesign
-                  );
-
-                  // Crear un nuevo arreglo para forzar la detección de cambios
-                  const newDesigns = [...this.designs];
-                  newDesigns[index] = updatedDesign;
-                  this.designs = newDesigns;
-
-                  console.log('Arreglo de diseños actualizado:', this.designs);
-                  this.cdr.markForCheck();
-                  this.cdr.detectChanges();
-                }
-              },
-              (error) => {
-                console.error('Error al actualizar el diseño:', error);
-              }
-            );
-          break;
-
-        case 'fabric':
-          this.userService
-            .actualizar_tela(this.currentEditId, updatedData)
-            .subscribe(
-              (response) => {
-                console.log(
-                  'Respuesta del servidor al actualizar tela:',
-                  response
-                );
-
-                // Buscar el índice de la tela en el arreglo
-                const index = this.fabrics.findIndex(
-                  (fabric) => this.getMongoId(fabric) === this.currentEditId
-                );
-
-                if (index !== -1) {
-                  // Actualizar la tela con la respuesta del servidor o con los datos actualizados
-                  const updatedFabric = response || {
-                    ...this.fabrics[index],
-                    ...updatedData,
-                  };
-                  console.log(
-                    'Actualizando tela en índice',
-                    index,
-                    'con:',
-                    updatedFabric
-                  );
-
-                  // Crear un nuevo arreglo para forzar la detección de cambios
-                  const newFabrics = [...this.fabrics];
-                  newFabrics[index] = updatedFabric;
-                  this.fabrics = newFabrics;
-
-                  console.log('Arreglo de telas actualizado:', this.fabrics);
-                  this.cdr.markForCheck();
-                  this.cdr.detectChanges();
-                }
-              },
-              (error) => {
-                console.error('Error al actualizar la tela:', error);
-              }
-            );
-          break;
-      }
-    }
-    // Si es inserción
-    else {
-      const saved =
-        event.response?.nuevoModelo ||
-        event.response?.nuevoDiseno ||
-        event.response?.nuevaTela ||
-        event.data;
-
-      console.log('Elemento guardado por el servidor:', saved);
-
-      switch (event.type) {
-        case 'model':
-          this.models = [...this.models, saved];
-          console.log(
-            'Modelos actualizados después de inserción:',
-            this.models
+          saveObservable = this.userService.actualizar_modelo(
+            this.currentEditId,
+            updateData
           );
           break;
         case 'design':
-          this.designs = [...this.designs, saved];
-          console.log(
-            'Diseños actualizados después de inserción:',
-            this.designs
+          saveObservable = this.userService.actualizar_diseno(
+            this.currentEditId,
+            updateData
           );
           break;
         case 'fabric':
-          this.fabrics = [...this.fabrics, saved];
-          console.log('Telas actualizadas después de inserción:', this.fabrics);
+          saveObservable = this.userService.actualizar_tela(
+            this.currentEditId,
+            updateData
+          );
           break;
+        case 'category':
+          // Assuming you have an update category service
+          // saveObservable = this.userService.actualizar_categoria(this.currentEditId, updateData);
+          saveObservable = new Subject().asObservable(); // Placeholder
+          break;
+        default:
+          this.isSubmitting = false;
+          this.errorMessage = 'Tipo de item desconocido para actualizar.';
+          this.cdr.detectChanges();
+          return;
       }
 
-      // ✅ Refrescar datos después de insertar o editar
-      this.loadInitialData(); // <- AÑADE ESTA LÍNEA AQUÍ
-      // Forzar la detección de cambios después de la inserción
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
-    }
+      saveObservable
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => {
+            this.isSubmitting = false;
+            this.cdr.detectChanges();
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            // response es el item actualizado desde el backend
+            console.log(
+              `Respuesta del servidor al actualizar ${event.type}:`,
+              response
+            );
+            // Asumimos que 'response' es el objeto actualizado completo.
+            // Si 'response' es solo un mensaje de éxito, necesitarías fusionar 'updateData' con el item existente.
+            const updatedItemFromApi = response;
 
-    // Resetear el modo de edición
-    this.isEditMode = false;
-    this.currentEditId = '';
-    this.currentItemData = null;
+            if (event.type === 'model') {
+              const index = this.models.findIndex(
+                (m) => this.getMongoId(m) === this.currentEditId
+              );
+              if (index !== -1) {
+                this.models = [
+                  ...this.models.slice(0, index),
+                  updatedItemFromApi as Model,
+                  ...this.models.slice(index + 1),
+                ];
+              }
+            } else if (event.type === 'design') {
+              const index = this.designs.findIndex(
+                (d) => this.getMongoId(d) === this.currentEditId
+              );
+              if (index !== -1) {
+                this.designs = [
+                  ...this.designs.slice(0, index),
+                  updatedItemFromApi as Design,
+                  ...this.designs.slice(index + 1),
+                ];
+              }
+            } else if (event.type === 'fabric') {
+              const index = this.fabrics.findIndex(
+                (f) => this.getMongoId(f) === this.currentEditId
+              );
+              if (index !== -1) {
+                this.fabrics = [
+                  ...this.fabrics.slice(0, index),
+                  updatedItemFromApi as Fabric,
+                  ...this.fabrics.slice(index + 1),
+                ];
+              }
+            } else if (event.type === 'category') {
+              const index = this.categories.findIndex(
+                (c) => this.getMongoId(c) === this.currentEditId
+              );
+              if (index !== -1) {
+                this.categories = [
+                  ...this.categories.slice(0, index),
+                  updatedItemFromApi,
+                  ...this.categories.slice(index + 1),
+                ];
+              }
+            }
+            this.closeModal();
+          },
+          error: (error: any) => {
+            console.error(`Error al actualizar ${event.type}:`, error);
+            this.errorMessage = `Error al actualizar. Por favor, revise los datos e intente de nuevo.`;
+            // El modal permanece abierto para corrección
+          },
+        });
+    } else {
+      // --- Crear nuevo elemento ---
+      const createData = event.data;
+      console.log(`Creando nuevo ${event.type}:`, createData);
+      switch (event.type) {
+        case 'model':
+          saveObservable = this.userService.insertar_modelo(createData);
+          break;
+        case 'design':
+          saveObservable = this.userService.insertar_diseno(createData);
+          break;
+        case 'fabric':
+          saveObservable = this.userService.insertar_tela(createData);
+          break;
+        case 'category':
+          // Assuming you have a create category service
+          // saveObservable = this.userService.insertar_categoria(createData);
+          saveObservable = new Subject().asObservable(); // Placeholder
+          break;
+        default:
+          this.isSubmitting = false;
+          this.errorMessage = 'Tipo de item desconocido para crear.';
+          this.cdr.detectChanges();
+          return;
+      }
+
+      saveObservable
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => {
+            this.isSubmitting = false;
+            this.cdr.detectChanges();
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            // response es el nuevo item creado desde el backend (con _id, createdAt, etc.)
+            console.log(
+              `Respuesta del servidor al crear ${event.type}:`,
+              response
+            );
+            const newItemFromApi = response; // Asumimos que 'response' es el objeto nuevo completo
+            if (event.type === 'model') {
+              this.models = [newItemFromApi as Model, ...this.models];
+            } else if (event.type === 'design') {
+              this.designs = [newItemFromApi as Design, ...this.designs];
+            } else if (event.type === 'fabric') {
+              this.fabrics = [newItemFromApi as Fabric, ...this.fabrics];
+            } else if (event.type === 'category') {
+              this.categories = [newItemFromApi, ...this.categories];
+            }
+            this.closeModal();
+          },
+          error: (error: any) => {
+            console.error(`Error al crear ${event.type}:`, error);
+            this.errorMessage = `Error al crear. Por favor, revise los datos e intente de nuevo.`;
+            // El modal permanece abierto para corrección
+          },
+        });
+    }
   }
 
-  // Método para guardar todo el formulario
+  // Método para guardar todo el formulario (si se implementara una funcionalidad de "Guardar Todo")
   onSubmit() {
-    const formData = {
-      models: this.models,
-      designs: this.designs,
-      fabrics: this.fabrics,
-    };
-
-    console.log('Datos del formulario completo:', formData);
-
-    // Aquí podrías enviar todos los datos si tienes una API:
-    // this.userService.saveAll(formData).subscribe(...)
+    // Esta función actualmente no está conectada a ningún elemento de la UI en el HTML proporcionado.
+    // Si fuera necesario, aquí se implementaría la lógica para guardar todos los cambios pendientes.
+    this.isLoading = true; // O un nuevo estado como isSavingAll
+    this.errorMessage = null;
+    console.log('Intentando guardar todos los datos...');
+    // Lógica para enviar todos los datos (models, designs, fabrics) al backend.
+    // Ejemplo:
+    // this.userService.guardarTodo({ models: this.models, designs: this.designs, fabrics: this.fabrics })
+    //   .pipe(
+    //     takeUntil(this.destroy$),
+    //     finalize(() => {
+    //       this.isLoading = false;
+    //       this.cdr.detectChanges();
+    //     })
+    //   )
+    //   .subscribe({
+    //     next: () => console.log('Todos los datos guardados exitosamente.'),
+    //     error: (err) => {
+    //       this.errorMessage = 'Error al guardar todos los datos.';
+    //       console.error(err);
+    //     }
+    //   });
   }
-
-  
 }

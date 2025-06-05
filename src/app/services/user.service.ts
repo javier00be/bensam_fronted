@@ -115,4 +115,18 @@ export class UserService {
     return this.http.get<any[]>(`${this.apiUrl}/almacen/obtener`);
   }
 
+  //metodos para categorias
+  insertar_categoria(categoriaData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/categoria/crear`, categoriaData);
+  }
+  obtener_categorias(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/categoria/obtener`);
+  }
+  actualizar_categoria(id: string, categoriaData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/categoria/actualizar/${id}`, categoriaData);
+  }
+  eliminar_categoria(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/categoria/eliminar/${id}`);
+  }
+
 }
