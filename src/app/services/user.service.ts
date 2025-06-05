@@ -28,17 +28,21 @@ export class UserService {
 
   // Obtener modelos
   obtener_modelo(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/modelo/listar`);
+    return this.http.get<any[]>(`${this.apiUrl}/modelo/obtener`);
   }
 
   // Obtener diseños
   obtener_diseno(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/diseno/listar`);
+    return this.http.get<any[]>(`${this.apiUrl}/diseno/obtener`);
   }
 
   // Obtener telas
   obtener_telas(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/tela/listar`);
+    return this.http.get<any[]>(`${this.apiUrl}/tela/obtener`);
+  }
+
+  obtener_tela_separados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tela/obtener_separado`);
   }
 
   // Actualizar modelo
@@ -123,10 +127,12 @@ export class UserService {
     return this.http.get<any[]>(`${this.apiUrl}/categoria/obtener`);
   }
   actualizar_categoria(id: string, categoriaData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/categoria/actualizar/${id}`, categoriaData);
+    return this.http.put(
+      `${this.apiUrl}/categoria/actualizar/${id}`,
+      categoriaData
+    );
   }
   eliminar_categoria(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/categoria/eliminar/${id}`);
   }
-
 }
