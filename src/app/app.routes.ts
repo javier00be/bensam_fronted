@@ -7,11 +7,19 @@ import { AlmacenComponent } from './components/admin/pages/almacen/almacen.compo
 import { ProductoComponent } from './components/admin/pages/producto/producto.component';
 import { MaterialComponent } from './components/admin/pages/material/material.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { HomeComponent as EcommerceHomeComponent } from './components/ecommerce/home/home.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  {
+    path: 'ecommerce',
+    loadComponent: () =>
+      import('../app/components/ecommerce/home/home.component').then(
+        (m) => m.HomeComponent
+      ),
+  },
   {
     path: 'admin',
     component: AdminComponent,
@@ -48,6 +56,13 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'Dashboard',
         pathMatch: 'full',
+      },
+      {
+        path: 'pedido',
+        loadComponent: () =>
+          import(
+            '../app/components/admin/pages/pedido/pedido.component'
+          ).then((m) => m.PedidoComponent),
       },
     ],
   },

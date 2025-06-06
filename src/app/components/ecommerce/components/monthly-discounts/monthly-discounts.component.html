@@ -1,0 +1,51 @@
+<div class="mb-20 max-w-5xl mx-auto">
+  <h3 class="text-xl font-semibold mb-2">
+    Descuentos del Mes
+  </h3>
+  <p class="text-gray-600 mb-6">
+    Aprovecha el tiempo disponible
+  </p>
+  <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
+    <div class="flex flex-col items-center md:items-start space-y-4">
+      <button (click)="onComprarClick()" class="bg-black text-white font-semibold px-6 py-2 rounded-md mb-4">
+        Comprar
+      </button>
+      <div class="flex space-x-4 text-center text-sm font-mono text-gray-700">
+        <div>
+          <div class="text-2xl font-bold">
+            {{ countdown.days.toString().padStart(2, '0') }}
+          </div>
+          <div>Días</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold">
+            {{ countdown.hours.toString().padStart(2, '0') }}
+          </div>
+          <div>Horas</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold">
+            {{ countdown.minutes.toString().padStart(2, '0') }}
+          </div>
+          <div>Minutos</div>
+        </div>
+        <div>
+          <div class="text-2xl font-bold">
+            {{ countdown.seconds.toString().padStart(2, '0') }}
+          </div>
+          <div>Segundos</div>
+        </div>
+      </div>
+    </div>
+    <div class="relative w-full max-w-xs md:max-w-sm">
+      <img alt="Man in blue suit posing with hand in pocket, white background"
+           class="rounded-md w-full object-cover"
+           height="450"
+           src="https://storage.googleapis.com/a1aa/image/ed603a48-c8ec-4d41-26a3-406c4f040c64.jpg"
+           width="300"/>
+      <div class="absolute bottom-0 left-0 bg-white bg-opacity-90 w-full p-3 rounded-b-md text-sm font-semibold">
+        50% OFF
+      </div>
+    </div>
+  </div>
+</div>

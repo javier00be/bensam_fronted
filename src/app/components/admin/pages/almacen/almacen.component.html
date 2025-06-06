@@ -115,7 +115,7 @@
             <select id="modelo" name="modelo" [(ngModel)]="modeloFiltro"
               class="w-full rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">
               <option value="">Todos</option>
-              <option *ngFor="let option of opcionesModelo" [value]="option">{{ option }}</option>
+              <option *ngFor="let option of opcionesModelo" [value]="option.nombre">{{ option.nombre }}</option>
             </select>
           </div>
           <div>
@@ -123,7 +123,7 @@
             <select id="diseno" name="diseno" [(ngModel)]="disenoFiltro"
               class="w-full rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">
               <option value="">Todos</option>
-              <option *ngFor="let option of opcionesDiseno" [value]="option">{{ option }}</option>
+              <option *ngFor="let option of opcionesDiseno" [value]="option.nombre">{{ option.nombre }}</option>
             </select>
           </div>
           <div>
@@ -131,7 +131,7 @@
             <select id="tela" name="tela" [(ngModel)]="telaFiltro"
               class="w-full rounded border border-gray-300 text-xs text-gray-900 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black focus:border-black">
               <option value="">Todos</option>
-              <option *ngFor="let option of opcionesTela" [value]="option">{{ option }}</option>
+              <option *ngFor="let option of opcionesTela" [value]="option.nombre">{{ option.nombre }}</option>
             </select>
           </div>
           <button type="button" (click)="limpiarFiltros()"

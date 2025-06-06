@@ -22,6 +22,10 @@ const routes: Routes = [
   {
     path: 'material',
     loadComponent: () => import('../admin/pages/material/material.component').then(m => m.MaterialComponent)
+  },
+  {
+    path: 'pedido',
+    loadComponent: () => import('../admin/pages/pedido/pedido.component').then(m => m.PedidoComponent)
   }
 ];
 

@@ -1,17 +1,15 @@
 <div class="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
   <div class="max-w-7xl mx-auto">
     <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-6 lg:p-8">
-
-      <!-- Main Content Grid -->
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
-
-        <!-- Left Section - Product Details -->
         <div class="space-y-6">
           <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Producto</h2>
 
-          <!-- Product Name -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2" for="nombre">
+            <label
+              class="block text-sm font-medium text-gray-700 mb-2"
+              for="nombre"
+            >
               Nombre del producto
             </label>
             <input
@@ -23,8 +21,9 @@
             />
           </div>
 
-          <!-- Product Specs Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg"
+          >
             <div class="text-sm text-gray-700">
               <span class="font-medium">Modelo:</span> {{ modelo }}
             </div>
@@ -36,13 +35,18 @@
             </div>
           </div>
 
-          <!-- Quantity and Color -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg"
+          >
             <div class="text-sm text-gray-700">
-              <span class="font-medium">Cantidad Total del Inventario:</span> {{ cantidadTotalGeneral }}
+              <span class="font-medium">Cantidad Total del Inventario:</span>
+              {{ cantidadTotalGeneral }}
             </div>
             <div class="flex items-center gap-3">
-              <label for="tonalidad-color" class="text-sm font-medium text-gray-700">
+              <label
+                for="tonalidad-color"
+                class="text-sm font-medium text-gray-700"
+              >
                 Tonalidad:
               </label>
               <input
@@ -55,17 +59,18 @@
             </div>
           </div>
 
-          <!-- Size Selection - Actualizado para mostrar botones dinámicos -->
           <div>
             <p class="text-sm font-bold text-gray-900 mb-3">Talla</p>
             <div class="flex flex-wrap gap-2">
-              <ng-container *ngIf="productTallas.length > 0; else noTallasAvailable">
+              <ng-container
+                *ngIf="productTallas.length > 0; else noTallasAvailable"
+              >
                 <button
                   *ngFor="let talla of productTallas"
                   type="button"
                   (click)="selectTalla(talla)"
-                  [class.bg-black]="selectedTalla?.size === talla.size"
-                  [class.bg-gray-400]="selectedTalla?.size !== talla.size"
+                  [class.bg-black]="selectedTalla?._id === talla._id"
+                  [class.bg-gray-400]="selectedTalla?._id !== talla._id"
                   class="text-white text-sm font-medium rounded-md px-4 py-2 hover:bg-gray-800 transition"
                 >
                   {{ talla.size }}
@@ -77,19 +82,23 @@
             </div>
           </div>
 
-          <!-- Quantity Display - Ahora muestra la cantidad de la talla seleccionada -->
           <div class="p-3 bg-blue-50 rounded-lg">
             <p class="text-sm text-gray-700">
-              <span class="font-medium">Cantidad de la talla {{ selectedTalla?.size || 'seleccionada' }}:</span> {{ displayQuantity }} productos
+              <span class="font-medium"
+                >Cantidad de la talla
+                {{ selectedTalla?.size || "seleccionada" }}:</span
+              >
+              {{ displayQuantity }} productos
             </p>
           </div>
 
-          <!-- Form Section -->
-          <form class="space-y-6" (ngSubmit)="guardarProducto()">
+          <form class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- Price -->
               <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2" for="precio">
+                <label
+                  class="block text-sm font-bold text-gray-900 mb-2"
+                  for="precio"
+                >
                   Precio
                 </label>
                 <input
@@ -101,9 +110,11 @@
                 />
               </div>
 
-              <!-- Category -->
               <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2" for="categoria">
+                <label
+                  class="block text-sm font-bold text-gray-900 mb-2"
+                  for="categoria"
+                >
                   Categoría
                 </label>
                 <select
@@ -113,15 +124,18 @@
                   name="categoria"
                 >
                   <option disabled selected value="">Seleccione</option>
-                  <option>Categoría 1</option>
-                  <option>Categoría 2</option>
+                  <option *ngFor="let cat of categories" [value]="cat._id">
+                    {{ cat.nombre }}
+                  </option>
                 </select>
               </div>
             </div>
 
-            <!-- Description -->
             <div>
-              <label class="block text-sm font-medium text-gray-900 mb-2" for="descripcion">
+              <label
+                class="block text-sm font-medium text-gray-900 mb-2"
+                for="descripcion"
+              >
                 Descripción
               </label>
               <textarea
@@ -133,37 +147,58 @@
                 name="descripcion"
               ></textarea>
             </div>
-
-            <!-- Save Button - Moved inside the form to enable (ngSubmit) -->
-            <div class="flex justify-center sm:justify-end mt-8 pt-6 border-t border-gray-200">
-              <button
-                class="w-full sm:w-auto bg-gray-900 text-white text-sm font-medium rounded-lg py-3 px-8 hover:bg-black transition-colors"
-                type="submit"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline mr-2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-                Guardar Producto
-              </button>
-            </div>
           </form>
         </div>
 
-        <!-- Right Section - Image Gallery -->
         <div class="flex flex-col items-center space-y-6">
-          <!-- Upload Button -->
           <button
-            class="w-full max-w-md bg-black text-white rounded-lg py-3 px-6 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-800 transition"
+            class="w-full max-w-md bg-gray-900 text-white text-sm font-medium rounded-lg py-3 px-8 hover:bg-black transition-colors"
             type="button"
-            (click)="openUploadModal()"
+            (click)="guardarProducto()"
+            [disabled]="isLoading"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-            </svg>
-            Subir fotos
+            <span *ngIf="!isLoading">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-5 h-5 inline mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4.5 12.75l6 6 9-13.5"
+                />
+              </svg>
+              Guardar Producto
+            </span>
+            <span *ngIf="isLoading" class="flex items-center justify-center">
+              <svg
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Guardando...
+            </span>
           </button>
 
-          <!-- Image Display -->
           <div class="w-full max-w-md">
             <img
               *ngIf="currentImageUrl; else placeholderImage"
@@ -173,7 +208,9 @@
             />
 
             <ng-template #placeholderImage>
-              <div class="rounded-xl w-full h-80 sm:h-96 lg:h-[500px] bg-gray-100 flex items-center justify-center flex-col text-gray-400 border-2 border-dashed border-gray-300">
+              <div
+                class="rounded-xl w-full h-80 sm:h-96 lg:h-[500px] bg-gray-100 flex items-center justify-center flex-col text-gray-400 border-2 border-dashed border-gray-300"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -189,33 +226,62 @@
                   />
                 </svg>
                 <p class="text-sm sm:text-base">No hay imagen</p>
-                <p class="text-xs text-gray-500 mt-1">Haga clic en "Subir fotos" para agregar imágenes</p>
+                <p class="text-xs text-gray-500 mt-1">
+                  Haga clic en "Subir fotos" para agregar imágenes
+                </p>
               </div>
             </ng-template>
           </div>
 
-          <!-- Image Indicators -->
+          <button
+            class="w-full max-w-md bg-black text-white rounded-lg py-3 px-6 flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-800 transition"
+            type="button"
+            (click)="openUploadModal()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-5 h-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+              />
+            </svg>
+            Subir fotos
+          </button>
+
           <div class="flex justify-center gap-2 flex-wrap">
             <span
-              *ngFor="let imgUrl of productImages; let i = index"
+              *ngFor="let imgUrl of imagesForPreview; let i = index"
               [class.bg-black]="i === activeImageIndex"
               [class.bg-gray-400]="i !== activeImageIndex"
               class="w-3 h-3 rounded-full inline-block cursor-pointer hover:scale-110 transition-transform"
               (click)="setActiveImage(i)"
-              [attr.aria-label]="'Indicador de imagen ' + (i + 1) + (i === activeImageIndex ? ' (activo)' : '')"
+              [attr.aria-label]="
+                'Indicador de imagen ' +
+                (i + 1) +
+                (i === activeImageIndex ? ' (activo)' : '')
+              "
             >
             </span>
             <span
-              *ngIf="productImages.length === 0"
+              *ngIf="imagesForPreview.length === 0"
               class="w-3 h-3 rounded-full bg-gray-300 inline-block"
               aria-label="Sin imágenes"
             >
             </span>
           </div>
 
-          <!-- Image Counter -->
-          <div *ngIf="productImages.length > 0" class="text-sm text-gray-500">
-            {{ activeImageIndex + 1 }} de {{ productImages.length }}
+          <div
+            *ngIf="imagesForPreview.length > 0"
+            class="text-sm text-gray-500"
+          >
+            {{ activeImageIndex + 1 }} de {{ imagesForPreview.length }}
           </div>
         </div>
       </div>
@@ -223,7 +289,6 @@
   </div>
 </div>
 
-<!-- Modal de Imagen -->
 <app-modal-imagen
   [isOpen]="isUploadModalOpen"
   (closeModal)="closeUploadModal()"

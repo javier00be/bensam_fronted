@@ -1,0 +1,6 @@
+<div class="flex flex-col sm:flex-row justify-between items-center text-gray-600 text-xs sm:text-sm border-t border-b border-gray-200 py-6 mb-16">
+  <div *ngFor="let feature of features" class="flex items-center space-x-3 mb-4 sm:mb-0">
+    <i [class]="feature.icon + ' text-lg'"></i>
+    <span>{{ feature.text }}</span>
+  </div>
+</div>

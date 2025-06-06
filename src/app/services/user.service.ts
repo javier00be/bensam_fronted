@@ -135,4 +135,27 @@ export class UserService {
   eliminar_categoria(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/categoria/eliminar/${id}`);
   }
+
+  //metodos para productos
+  insertar_producto(productData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/producto/crear`, productData);
+  }
+
+  obtener_productos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/producto/obtener`);
+  }
+
+  obtener_producto_por_id(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/producto/obtener/${id}`);
+  }
+
+
+   // ✅ Nuevo método para subir UNA imagen a través de tu backend a Cloudinary
+  uploadImage(file: File): Observable<{ url: string }> { // Esperamos una URL
+    const formData = new FormData();
+    formData.append('image', file, file.name); // 'image' debe coincidir con el nombre del campo en Multer (upload.single('image'))
+    return this.http.post<{ url: string }>(`${this.apiUrl}/upload-image`, formData);
+  }
+
+
 }

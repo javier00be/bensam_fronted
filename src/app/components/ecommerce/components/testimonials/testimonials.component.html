@@ -1,0 +1,38 @@
+<div class="mb-20 max-w-4xl mx-auto text-center">
+  <h3 class="text-lg font-semibold mb-6">
+    This Is What Our Customers Say
+  </h3>
+  <div class="relative">
+    <div class="flex space-x-6 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+      <div *ngFor="let testimonial of testimonials"
+           class="flex-shrink-0 w-80 bg-white border border-gray-200 rounded-md p-6 shadow-sm snap-center">
+        <div class="flex items-center space-x-4 mb-4">
+          <img [alt]="testimonial.name + ' portrait'"
+               class="w-12 h-12 rounded-full object-cover"
+               height="48"
+               [src]="testimonial.avatar"
+               width="48"/>
+          <div class="text-left">
+            <p class="font-semibold">
+              {{ testimonial.name }}
+            </p>
+            <p class="text-xs text-gray-500">
+              Verified Buyer
+            </p>
+          </div>
+        </div>
+        <p class="text-gray-700 text-sm">
+          "{{ testimonial.comment }}"
+        </p>
+      </div>
+    </div>
+    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2 mt-4">
+      <button *ngFor="let testimonial of testimonials; let i = index"
+              [attr.aria-current]="currentTestimonial === i ? 'true' : null"
+              [attr.aria-label]="'Testimonial ' + (i + 1)"
+              (click)="selectTestimonial(i)"
+              [class]="'w-3 h-3 rounded-full ' + (currentTestimonial === i ? 'bg-gray-400' : 'bg-gray-300')">
+      </button>
+    </div>
+  </div>
+</div>

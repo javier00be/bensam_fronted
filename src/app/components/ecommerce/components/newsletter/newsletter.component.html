@@ -1,0 +1,36 @@
+<div class="mb-20 max-w-7xl mx-auto bg-gray-50 rounded-lg py-16 px-6 sm:px-16 flex flex-col md:flex-row items-center justify-between gap-8">
+  <img alt="Woman in yellow coat posing with hand in pocket, white background"
+       class="w-32 md:w-40 rounded-md object-cover"
+       height="300"
+       src="https://storage.googleapis.com/a1aa/image/725d7a03-c29a-4b74-32ff-70c7d3554dd0.jpg"
+       width="150"/>
+  <div class="max-w-xl text-center md:text-left">
+    <h4 class="text-xl font-semibold mb-3">
+      Subscribe To Our Newsletter
+    </h4>
+    <p class="text-gray-600 mb-6">
+      Get the latest updates on new products and upcoming sales
+    </p>
+    <form [formGroup]="newsletterForm" (ngSubmit)="onSubmit()" class="flex justify-center md:justify-start">
+      <input formControlName="email"
+             type="email"
+             placeholder="Enter your email"
+             class="border border-gray-300 rounded-l-md px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-pink-300"
+             [class.border-red-500]="email?.invalid && email?.touched"/>
+      <button type="submit"
+              [disabled]="newsletterForm.invalid"
+              class="bg-black text-white font-semibold px-6 py-2 rounded-r-md hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        Subscribe
+      </button>
+    </form>
+    <div *ngIf="email?.invalid && email?.touched" class="text-red-500 text-sm mt-2">
+      <span *ngIf="email?.errors?.['required']">Email is required</span>
+      <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+    </div>
+  </div>
+  <img alt="Woman in gray coat posing with hands in pockets, white background"
+       class="w-32 md:w-40 rounded-md object-cover"
+       height="300"
+       src="https://storage.googleapis.com/a1aa/image/82d73aea-0862-4033-ebc5-ac7f4e337a98.jpg"
+       width="150"/>
+</div>
