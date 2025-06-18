@@ -43,6 +43,14 @@ interface Category {
   // Añade otras propiedades específicas de la categoría aquí
 }
 
+interface Talla {
+  _id?: string;
+  id?: string;
+  talla: string;
+  createdAt: string | Date;
+  // Añade otras propiedades específicas de la talla aquí
+}
+
 @Component({
   selector: 'app-material',
   standalone: true,
@@ -50,7 +58,7 @@ interface Category {
     CommonModule,
     FormsModule,
     ModalComponent,
-    HttpClientModule, // Para componentes standalone, considera usar provideHttpClient() en la configuración de la app o en los providers del componente
+    HttpClientModule,
     ConfirmationModalComponent,
   ],
   providers: [UserService],
@@ -58,38 +66,33 @@ interface Category {
   styleUrls: ['./material.component.css'],
 })
 export class MaterialComponent implements OnInit, OnDestroy {
-  // --- Variables de Estado ---
-  activeTab: 'models' | 'designs' | 'fabrics' | 'categories' = 'models'; // Inicializa activeTab
+  activeTab: 'models' | 'designs' | 'fabrics' | 'categories' | 'tallas' = 'models';
 
-  // Arrays de datos con tipos
   models: Model[] = [];
   designs: Design[] = [];
   fabrics: Fabric[] = [];
   categories: any[] = [];
+  tallas: any[] = [];
 
-  // Visibilidad de modales
   showModal: boolean = false;
   showConfirmationModal: boolean = false;
 
-  // Para modal de añadir/editar
-  currentModalType: 'model' | 'design' | 'fabric' | 'category' = 'model';
+  currentModalType: 'model' | 'design' | 'fabric' | 'category' | 'talla' = 'model';
   isEditMode: boolean = false;
   currentEditId: string = '';
-  currentItemData: Model | Design | Fabric | any | null = null;
+  currentItemData: Model | Design | Fabric | Talla | any | null = null;
 
-  // Para modal de confirmación
   itemToDelete: {
-    type: 'model' | 'design' | 'fabric' | 'category';
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla';
     id: string;
     name?: string;
   } | null = null;
 
-  // Estados de carga y error
   isLoading: boolean = false;
   errorMessage: string | null = null;
-  isSubmitting: boolean = false; // Para operaciones de guardado/eliminación en modales
+  isSubmitting: boolean = false;
 
-  private destroy$ = new Subject<void>(); // Para desuscribirse de observables
+  private destroy$ = new Subject<void>();
 
   constructor(
     private userService: UserService,
@@ -112,21 +115,23 @@ export class MaterialComponent implements OnInit, OnDestroy {
       modelos: this.userService.obtener_modelo(),
       disenos: this.userService.obtener_diseno(),
       telas: this.userService.obtener_tela_separados(),
-      category: this.userService.obtener_categorias(), // Asegúrate de que este método exista en tu servicio
+      category: this.userService.obtener_categorias(),
+      tallas: this.userService.obtener_tallas(),
     })
       .pipe(
-        takeUntil(this.destroy$), // Desuscribirse cuando el componente se destruya
+        takeUntil(this.destroy$),
         finalize(() => {
           this.isLoading = false;
-          this.cdr.detectChanges(); // Asegura la actualización de la UI cuando la carga finaliza
+          this.cdr.detectChanges();
         })
       )
       .subscribe({
-        next: ({ modelos, disenos, telas, category }) => {
+        next: ({ modelos, disenos, telas, category, tallas }) => {
           this.models = [...(modelos || [])] as Model[];
           this.designs = [...(disenos || [])] as Design[];
           this.fabrics = [...(telas || [])] as Fabric[];
-          this.categories = [...(category || [])] as Category[]; // Inicializa categorías si no tienes datos
+          this.categories = [...(category || [])] as Category[];
+          this.tallas = [...(tallas || [])] as Talla[];
           console.log('Datos iniciales cargados/recargados.');
         },
         error: (err) => {
@@ -137,22 +142,19 @@ export class MaterialComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Método para obtener el ID correcto (MongoDB podría usar _id)
   getMongoId(item: any): string {
     return item?._id || item?.id || '';
   }
 
-  // --- Manejo de Modales ---
-  openModal(type: 'model' | 'design' | 'fabric' | 'category') {
+  openModal(type: 'model' | 'design' | 'fabric' | 'category' | 'talla') {
     this.currentModalType = type;
     this.isEditMode = false;
     this.currentItemData = null;
     this.currentEditId = '';
-    this.errorMessage = null; // Limpiar errores previos al abrir modal
+    this.errorMessage = null;
     this.showModal = true;
   }
 
-  // Método closeModal mejorado
   closeModal() {
     console.log('🔐 Cerrando modal...');
 
@@ -164,21 +166,18 @@ export class MaterialComponent implements OnInit, OnDestroy {
     this.isLoading = false;
     this.errorMessage = null;
 
-    // Forzar detección final
     this.cdr.detectChanges();
 
     console.log('✅ Modal cerrado correctamente');
   }
 
-  // --- Editar Elemento ---
   editItem(
-    type: 'model' | 'design' | 'fabric' | 'category',
-    item: Model | Design | Fabric | any
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla',
+    item: Model | Design | Fabric | Talla | any
   ) {
     this.isEditMode = true;
     this.currentModalType = type;
     this.currentEditId = this.getMongoId(item);
-    // Deep clone the item data to ensure changes in modal don't affect original list until saved
     this.currentItemData = { ...JSON.parse(JSON.stringify(item)) };
     this.errorMessage = null;
 
@@ -192,10 +191,9 @@ export class MaterialComponent implements OnInit, OnDestroy {
     this.showModal = true;
   }
 
-  // --- Eliminar Elemento ---
   confirmDeleteItem(
-    type: 'model' | 'design' | 'fabric' | 'category',
-    item: Model | Design | Fabric | any
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla',
+    item: Model | Design | Fabric | Talla | any
   ) {
     const id = this.getMongoId(item);
     this.errorMessage = null;
@@ -221,6 +219,8 @@ export class MaterialComponent implements OnInit, OnDestroy {
         `${(item as Fabric).diseno} - ${(item as Fabric).color}` || 'esta tela';
     } else if (type === 'category') {
       itemName = (item as any).nombre || 'esta categoria';
+    } else if (type === 'talla') {
+      itemName = (item as Talla).talla || 'esta talla';
     }
 
     this.itemToDelete = { type, id, name: itemName };
@@ -243,7 +243,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
     this.itemToDelete = null;
   }
 
-  deleteItem(type: 'model' | 'design' | 'fabric' | 'category', id: string) {
+  deleteItem(type: 'model' | 'design' | 'fabric' | 'category' | 'talla', id: string) {
     if (!id) {
       console.error(`ID no válido para eliminar ${type}`);
       this.errorMessage = `ID no válido para eliminar.`;
@@ -275,6 +275,20 @@ export class MaterialComponent implements OnInit, OnDestroy {
           );
           this.errorMessage =
             'Funcionalidad de eliminar categoría no disponible.';
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+          return;
+        }
+        break;
+      case 'talla':
+        if (this.userService.eliminar_talla) {
+          deleteObservable = this.userService.eliminar_talla(id);
+        } else {
+          console.error(
+            'Método eliminar_talla no implementado en el servicio'
+          );
+          this.errorMessage =
+            'Funcionalidad de eliminar talla no disponible.';
           this.isSubmitting = false;
           this.cdr.detectChanges();
           return;
@@ -322,6 +336,11 @@ export class MaterialComponent implements OnInit, OnDestroy {
                 (category) => this.getMongoId(category) !== id
               );
               break;
+            case 'talla':
+              this.tallas = this.tallas.filter(
+                (talla) => this.getMongoId(talla) !== id
+              );
+              break;
           }
 
           // Mostrar mensaje de éxito (opcional)
@@ -360,6 +379,11 @@ export class MaterialComponent implements OnInit, OnDestroy {
                   (category) => this.getMongoId(category) !== id
                 );
                 break;
+              case 'talla':
+                this.tallas = this.tallas.filter(
+                  (talla) => this.getMongoId(talla) !== id
+                );
+                break;
             }
             this.errorMessage = null; // Limpiar error si se removió localmente
           }
@@ -370,18 +394,12 @@ export class MaterialComponent implements OnInit, OnDestroy {
 
   // --- MÉTODO PRINCIPAL CORREGIDO: Guardar/Actualizar Contenido desde Modal ---
   handleSavedContent(event: {
-    type: 'model' | 'design' | 'fabric' | 'category';
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla';
     data: any;
     isEdit?: boolean;
     editId?: string;
   }) {
     console.log('🔄 handleSavedContent recibido:', event);
-    console.log('🔍 Estado actual del componente:', {
-      isEditMode: this.isEditMode,
-      currentEditId: this.currentEditId,
-      eventIsEdit: event.isEdit,
-      eventEditId: event.editId
-    });
 
     // Determinar si es edición basado en múltiples fuentes
     const isEdit = event.isEdit || this.isEditMode;
@@ -392,7 +410,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
       this.handleEditUpdate(event.type, editId, event.data);
     } else {
       console.log('➕ Procesando CREACIÓN');
-      this.handleNewItemCreation(event.type, event.data);
+      this.loadInitialData();
     }
 
     // Cerrar modal después de procesar
@@ -403,7 +421,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
 
   // Método separado para manejar actualizaciones
   private handleEditUpdate(
-    type: 'model' | 'design' | 'fabric' | 'category',
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla',
     editId: string,
     updatedData: any
   ) {
@@ -419,20 +437,48 @@ export class MaterialComponent implements OnInit, OnDestroy {
 
     switch (type) {
       case 'model':
-        updateObservable = this.userService.actualizar_modelo(editId, updatePayload);
+        updateObservable = this.userService.actualizar_modelo(
+          editId,
+          updatePayload
+        );
         break;
       case 'design':
-        updateObservable = this.userService.actualizar_diseno(editId, updatePayload);
+        updateObservable = this.userService.actualizar_diseno(
+          editId,
+          updatePayload
+        );
         break;
       case 'fabric':
-        updateObservable = this.userService.actualizar_tela(editId, updatePayload);
+        updateObservable = this.userService.actualizar_tela(
+          editId,
+          updatePayload
+        );
         break;
       case 'category':
         if (this.userService.actualizar_categoria) {
-          updateObservable = this.userService.actualizar_categoria(editId, updatePayload);
+          updateObservable = this.userService.actualizar_categoria(
+            editId,
+            updatePayload
+          );
         } else {
           console.error('Método actualizar_categoria no disponible');
-          this.handleError('Funcionalidad de actualizar categoría no disponible.');
+          this.handleError(
+            'Funcionalidad de actualizar categoría no disponible.'
+          );
+          return;
+        }
+        break;
+      case 'talla':
+        if (this.userService.actualizar_talla) {
+          updateObservable = this.userService.actualizar_talla(
+            editId,
+            updatePayload
+          );
+        } else {
+          console.error('Método actualizar_talla no disponible');
+          this.handleError(
+            'Funcionalidad de actualizar talla no disponible.'
+          );
           return;
         }
         break;
@@ -454,141 +500,119 @@ export class MaterialComponent implements OnInit, OnDestroy {
           console.log('✅ Actualización exitosa:', response);
 
           // Usar la respuesta del servidor o los datos originales si no hay respuesta
-          const itemToUpdate = response || { ...updatePayload, _id: editId, id: editId };
+          const itemToUpdate = response || {
+            ...updatePayload,
+            _id: editId,
+            id: editId,
+          };
 
           this.updateItemInArray(type, editId, itemToUpdate);
           this.forceChangeDetection();
+          this.loadInitialData();
 
           console.log('🎉 Item actualizado en la lista');
         },
         error: (error: any) => {
           console.error('❌ Error al actualizar:', error);
-          this.handleError(`Error al actualizar ${type}. Por favor, intente de nuevo.`);
+          this.handleError(
+            `Error al actualizar ${type}. Por favor, intente de nuevo.`
+          );
         },
       });
   }
 
   // Método separado para manejar creación de nuevos items
   private handleNewItemCreation(
-    type: 'model' | 'design' | 'fabric' | 'category',
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla',
     newData: any
   ) {
+    console.log('➕ handleNewItemCreation() llamado para:', type);
     console.log('➕ Creando nuevo item:', { type, newData });
 
     this.isSubmitting = true;
     this.errorMessage = null;
 
-    let createObservable;
-
-    switch (type) {
-      case 'model':
-        createObservable = this.userService.insertar_modelo(newData);
-        break;
-      case 'design':
-        createObservable = this.userService.insertar_diseno(newData);
-        break;
-      case 'fabric':
-        createObservable = this.userService.insertar_tela(newData);
-        break;
-      case 'category':
-        if (this.userService.insertar_categoria) {
-          createObservable = this.userService.insertar_categoria(newData);
-        } else {
-          console.error('Método insertar_categoria no disponible');
-          this.handleError('Funcionalidad de crear categoría no disponible.');
-          return;
-        }
-        break;
-      default:
-        this.handleError('Tipo de item desconocido para crear.');
-        return;
-    }
-
-    createObservable
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => {
-          this.isSubmitting = false;
-          this.cdr.detectChanges();
-        })
-      )
-      .subscribe({
-        next: (response: any) => {
-          console.log('✅ Creación exitosa:', response);
-
-          // Usar la respuesta del servidor o crear un objeto con los datos originales
-          const newItem = response || {
-            ...newData,
-            _id: Date.now().toString(), // ID temporal si el servidor no devuelve uno
-            createdAt: new Date().toISOString()
-          };
-
-          this.addItemToArray(type, newItem);
-          this.forceChangeDetection();
-
-          console.log('🎉 Nuevo item agregado a la lista');
-        },
-        error: (error: any) => {
-          console.error('❌ Error al crear:', error);
-          this.handleError(`Error al crear ${type}. Por favor, intente de nuevo.`);
-        },
-      });
   }
 
   // Método mejorado para actualizar item en array
   private updateItemInArray(
-    type: 'model' | 'design' | 'fabric' | 'category',
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla',
     editId: string,
     updatedItem: any
   ) {
-    console.log('🔄 Actualizando item en array:', { type, editId, updatedItem });
+    console.log('🔄 Actualizando item en array:', {
+      type,
+      editId,
+      updatedItem,
+    });
 
     switch (type) {
       case 'model':
-        const modelIndex = this.models.findIndex(m => this.getMongoId(m) === editId);
+        const modelIndex = this.models.findIndex(
+          (m) => this.getMongoId(m) === editId
+        );
         if (modelIndex !== -1) {
           this.models = [
             ...this.models.slice(0, modelIndex),
             { ...updatedItem },
-            ...this.models.slice(modelIndex + 1)
+            ...this.models.slice(modelIndex + 1),
           ];
           console.log('✅ Modelo actualizado en posición:', modelIndex);
         }
         break;
 
       case 'design':
-        const designIndex = this.designs.findIndex(d => this.getMongoId(d) === editId);
+        const designIndex = this.designs.findIndex(
+          (d) => this.getMongoId(d) === editId
+        );
         if (designIndex !== -1) {
           this.designs = [
             ...this.designs.slice(0, designIndex),
             { ...updatedItem },
-            ...this.designs.slice(designIndex + 1)
+            ...this.designs.slice(designIndex + 1),
           ];
           console.log('✅ Diseño actualizado en posición:', designIndex);
         }
         break;
 
       case 'fabric':
-        const fabricIndex = this.fabrics.findIndex(f => this.getMongoId(f) === editId);
+        const fabricIndex = this.fabrics.findIndex(
+          (f) => this.getMongoId(f) === editId
+        );
         if (fabricIndex !== -1) {
           this.fabrics = [
             ...this.fabrics.slice(0, fabricIndex),
             { ...updatedItem },
-            ...this.fabrics.slice(fabricIndex + 1)
+            ...this.fabrics.slice(fabricIndex + 1),
           ];
           console.log('✅ Tela actualizada en posición:', fabricIndex);
         }
         break;
 
       case 'category':
-        const categoryIndex = this.categories.findIndex(c => this.getMongoId(c) === editId);
+        const categoryIndex = this.categories.findIndex(
+          (c) => this.getMongoId(c) === editId
+        );
         if (categoryIndex !== -1) {
           this.categories = [
             ...this.categories.slice(0, categoryIndex),
             { ...updatedItem },
-            ...this.categories.slice(categoryIndex + 1)
+            ...this.categories.slice(categoryIndex + 1),
           ];
           console.log('✅ Categoría actualizada en posición:', categoryIndex);
+        }
+        break;
+      case 'talla':
+        const tallaIndex = this.tallas.findIndex(
+          (t) => this.getMongoId(t) === editId
+        );
+        if (tallaIndex !== -1) {
+          this.tallas = [
+            ...this.tallas.slice(0, tallaIndex),
+            { ...updatedItem },
+            ...this.tallas.slice(tallaIndex + 1),
+          ];
+          console.log('✅ Talla actualizada en posición:', tallaIndex);
         }
         break;
     }
@@ -596,7 +620,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
 
   // Método mejorado para agregar nuevo item
   private addItemToArray(
-    type: 'model' | 'design' | 'fabric' | 'category',
+    type: 'model' | 'design' | 'fabric' | 'category' | 'talla',
     newItem: any
   ) {
     console.log('➕ Agregando nuevo item al array:', { type, newItem });
@@ -616,7 +640,17 @@ export class MaterialComponent implements OnInit, OnDestroy {
         break;
       case 'category':
         this.categories = [{ ...newItem }, ...this.categories];
-        console.log('✅ Nueva categoría agregada. Total:', this.categories.length);
+        console.log(
+          '✅ Nueva categoría agregada. Total:',
+          this.categories.length
+        );
+        break;
+      case 'talla':
+        this.tallas = [{ ...newItem }, ...this.tallas];
+        console.log(
+          '✅ Nueva talla agregada. Total:',
+          this.tallas.length
+        );
         break;
     }
   }

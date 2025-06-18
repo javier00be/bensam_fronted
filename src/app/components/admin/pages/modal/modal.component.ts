@@ -20,7 +20,8 @@ import { UserService } from '../../../../services/user.service';
 })
 export class ModalComponent implements OnInit, OnChanges {
   @Input() isVisible: boolean = false;
-  @Input() modalType: 'model' | 'design' | 'fabric' | 'category' = 'model';
+  @Input() modalType: 'model' | 'design' | 'fabric' | 'category' | 'talla' =
+    'model';
   @Input() editData: any = null;
   @Input() isEdit: boolean = false;
 
@@ -37,6 +38,7 @@ export class ModalComponent implements OnInit, OnChanges {
   designData: any = { nombre: '' };
   fabricData: any = { diseno: '', color: '' };
   categoryData: any = { nombre: '' };
+  tallaData: any = { talla: '' };
 
   // Mensaje de estado para retroalimentación
   statusMessage = '';
@@ -56,7 +58,7 @@ export class ModalComponent implements OnInit, OnChanges {
       isVisible: this.isVisible,
       isEdit: this.isEdit,
       modalType: this.modalType,
-      editData: this.editData
+      editData: this.editData,
     });
 
     // Resetear siempre que el modal se abra
@@ -102,7 +104,7 @@ export class ModalComponent implements OnInit, OnChanges {
         case 'model':
           this.modelData = {
             ...this.editData,
-            nombre: this.editData.nombre || ''
+            nombre: this.editData.nombre || '',
           };
           this.content = this.modelData.nombre;
           console.log('✅ Modelo poblado:', this.modelData);
@@ -111,7 +113,7 @@ export class ModalComponent implements OnInit, OnChanges {
         case 'design':
           this.designData = {
             ...this.editData,
-            nombre: this.editData.design || this.editData.nombre || ''
+            nombre: this.editData.design || this.editData.nombre || '',
           };
           this.content = this.designData.nombre;
           console.log('✅ Diseño poblado:', this.designData);
@@ -121,7 +123,7 @@ export class ModalComponent implements OnInit, OnChanges {
           this.fabricData = {
             ...this.editData,
             diseno: this.editData.diseno || '',
-            color: this.editData.color || ''
+            color: this.editData.color || '',
           };
           this.fabricDesign = this.fabricData.diseno;
           this.fabricTexture = this.fabricData.color;
@@ -131,10 +133,18 @@ export class ModalComponent implements OnInit, OnChanges {
         case 'category':
           this.categoryData = {
             ...this.editData,
-            nombre: this.editData.nombre || ''
+            nombre: this.editData.nombre || '',
           };
           this.content = this.categoryData.nombre;
           console.log('✅ Categoría poblada:', this.categoryData);
+          break;
+        case 'talla':
+          this.tallaData = {
+            ...this.editData,
+            nombre: this.editData.nombre || '',
+          };
+          this.content = this.tallaData.nombre;
+          console.log('✅ Talla poblada:', this.tallaData);
           break;
       }
     } catch (error) {
@@ -154,6 +164,8 @@ export class ModalComponent implements OnInit, OnChanges {
         return `${action} Tela`;
       case 'category':
         return `${action} Categoría`;
+      case 'talla':
+        return `${action} Talla`;
       default:
         return '';
     }
@@ -180,6 +192,7 @@ export class ModalComponent implements OnInit, OnChanges {
     this.designData = { nombre: '' };
     this.fabricData = { diseno: '', color: '' };
     this.categoryData = { nombre: '' };
+    this.tallaData = { talla: '' };
 
     // Resetear mensajes de estado
     this.statusMessage = '';
@@ -187,13 +200,14 @@ export class ModalComponent implements OnInit, OnChanges {
     this.isLoading = false;
   }
 
-  // Guardar contenido básico (modelo, diseño, categoría)
+  // Guardar contenido básico (modelo, diseño, categoría, talla)
   saveContent(): void {
+    console.log('💾 saveContent() llamado para:', this.modalType);
     console.log('💾 Guardando contenido para:', this.modalType);
     console.log('📋 Estado actual:', {
       isEdit: this.isEdit,
       content: this.content,
-      editData: this.editData
+      editData: this.editData,
     });
 
     if (!this.content.trim()) {
@@ -211,24 +225,30 @@ export class ModalComponent implements OnInit, OnChanges {
       case 'model':
         dataToSave = {
           ...this.modelData,
-          nombre: this.content.trim()
+          nombre: this.content.trim(),
         };
         break;
       case 'design':
         dataToSave = {
           ...this.designData,
           nombre: this.content.trim(),
-          design: this.content.trim() // Mantener compatibilidad
+          design: this.content.trim(), // Mantener compatibilidad
         };
         break;
       case 'category':
         dataToSave = {
           ...this.categoryData,
-          nombre: this.content.trim()
+          nombre: this.content.trim(),
         };
         break;
+      case 'talla':
+        dataToSave = {
+          talla: this.content.trim().trim(),
+        };
+        delete dataToSave._id;
+        break;
       default:
-        this.handleError(null, 'Tipo de modal no válido');
+        this.handleError(null, 'Tipo de elemento no válido');
         return;
     }
 
@@ -248,7 +268,7 @@ export class ModalComponent implements OnInit, OnChanges {
       isEdit: this.isEdit,
       fabricDesign: this.fabricDesign,
       fabricTexture: this.fabricTexture,
-      editData: this.editData
+      editData: this.editData,
     });
 
     if (!this.fabricDesign.trim() || !this.fabricTexture.trim()) {
@@ -264,7 +284,8 @@ export class ModalComponent implements OnInit, OnChanges {
     const fabricDataToSave = {
       ...this.fabricData,
       diseno: this.fabricDesign.trim(),
-      color: this.fabricTexture.trim()
+      color: this.fabricTexture.trim(),
+      createdAt: this.fabricData.createdAt,
     };
 
     console.log('📤 Datos de tela a guardar:', fabricDataToSave);
@@ -283,11 +304,14 @@ export class ModalComponent implements OnInit, OnChanges {
     console.log('📝 Manejando edición:', {
       modalType: this.modalType,
       itemId: itemId,
-      dataToSave: dataToSave
+      dataToSave: dataToSave,
     });
 
     if (!itemId) {
-      this.handleError(null, 'No se pudo obtener el ID del elemento para editar');
+      this.handleError(
+        null,
+        'No se pudo obtener el ID del elemento para editar'
+      );
       return;
     }
 
@@ -296,7 +320,7 @@ export class ModalComponent implements OnInit, OnChanges {
       type: this.modalType,
       data: dataToSave,
       isEdit: true,
-      editId: itemId
+      editId: itemId,
     };
 
     console.log('📡 Emitiendo evento de edición:', eventData);
@@ -309,9 +333,10 @@ export class ModalComponent implements OnInit, OnChanges {
 
   // Manejar el guardado de nuevos elementos
   private handleNewSave(dataToSave: any): void {
+    console.log('➕ handleNewSave() llamado para:', this.modalType);
     console.log('➕ Creando nuevo elemento:', {
       modalType: this.modalType,
-      dataToSave: dataToSave
+      dataToSave: dataToSave,
     });
 
     switch (this.modalType) {
@@ -322,7 +347,8 @@ export class ModalComponent implements OnInit, OnChanges {
             this.handleSuccess(response, 'Modelo guardado correctamente');
             this.emitNewItemEvent(response || dataToSave);
           },
-          error: (error) => this.handleError(error, 'Error al guardar el modelo')
+          error: (error) =>
+            this.handleError(error, 'Error al guardar el modelo'),
         });
         break;
 
@@ -333,7 +359,8 @@ export class ModalComponent implements OnInit, OnChanges {
             this.handleSuccess(response, 'Diseño guardado correctamente');
             this.emitNewItemEvent(response || dataToSave);
           },
-          error: (error) => this.handleError(error, 'Error al guardar el diseño')
+          error: (error) =>
+            this.handleError(error, 'Error al guardar el diseño'),
         });
         break;
 
@@ -344,7 +371,7 @@ export class ModalComponent implements OnInit, OnChanges {
             this.handleSuccess(response, 'Tela guardada correctamente');
             this.emitNewItemEvent(response || dataToSave);
           },
-          error: (error) => this.handleError(error, 'Error al guardar la tela')
+          error: (error) => this.handleError(error, 'Error al guardar la tela'),
         });
         break;
 
@@ -356,7 +383,8 @@ export class ModalComponent implements OnInit, OnChanges {
               this.handleSuccess(response, 'Categoría guardada correctamente');
               this.emitNewItemEvent(response || dataToSave);
             },
-            error: (error) => this.handleError(error, 'Error al guardar la categoría')
+            error: (error) =>
+              this.handleError(error, 'Error al guardar la categoría'),
           });
         } else {
           // Simulación si el servicio no existe
@@ -365,7 +393,23 @@ export class ModalComponent implements OnInit, OnChanges {
           this.emitNewItemEvent(dataToSave);
         }
         break;
-
+      case 'talla':
+        if (typeof this.userService.insertar_talla === 'function') {
+          this.userService.insertar_talla(dataToSave).subscribe({
+            next: (response) => {
+            console.log('✅ Talla creada:', response);
+              this.handleSuccess(response, 'Talla guardada correctamente');
+              this.emitNewItemEvent(response || response || dataToSave);
+            },
+            error: (error) =>
+              this.handleError(error, 'Error al guardar la talla'),
+          });
+        } else {
+          console.error('Método insertar_talla no disponible');
+          this.handleError(null, 'Funcionalidad de crear talla no disponible.');
+          return;
+        }
+        break;
       default:
         this.handleError(null, 'Tipo de elemento no válido');
     }
@@ -373,10 +417,11 @@ export class ModalComponent implements OnInit, OnChanges {
 
   // Emitir evento para nuevos elementos
   private emitNewItemEvent(itemData: any): void {
+    console.log('📡 emitNewItemEvent() llamado para:', this.modalType);
     const eventData = {
       type: this.modalType,
       data: itemData,
-      isEdit: false
+      isEdit: false,
     };
 
     console.log('📡 Emitiendo evento de creación:', eventData);
@@ -394,6 +439,8 @@ export class ModalComponent implements OnInit, OnChanges {
         return 'Tela';
       case 'category':
         return 'Categoría';
+      case 'talla':
+        return 'Talla';
       default:
         return 'Elemento';
     }
