@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bensam Header</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50">
+
+    <header class="bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 lg:h-20">
+
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-2">
+                        <!-- Icono de chaqueta/blazer -->
+                        <div
+                            class="w-8 h-8 lg:w-10 lg:h-10 border-2 border-gray-800 rounded-sm flex items-center justify-center">
+                            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-800" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <!-- Nombre de la marca -->
+                        <h1 class="text-2xl lg:text-3xl font-light text-gray-800 tracking-wide">Bensam</h1>
+                    </div>
+                </div>
+
+                <!-- Navegación Desktop -->
+                <nav class="hidden md:flex items-center space-x-8 lg:space-x-12">
+                    <a href="#"
+                        class="text-gray-900 font-medium text-sm lg:text-base transition-colors duration-200 border-b-2 border-transparent hover:border-gray-300">
+                        Home
+                    </a>
+                    <a href="#"
+                        class="text-gray-600 hover:text-gray-900 font-medium text-sm lg:text-base transition-colors duration-200 border-b-2 border-transparent hover:border-gray-300">
+                        Deals
+                    </a>
+                    <a href="#"
+                        class="text-gray-600 hover:text-gray-900 font-medium text-sm lg:text-base transition-colors duration-200 border-b-2 border-transparent hover:border-gray-300">
+                        Nuevas Tendencias
+                    </a>
+                </nav>
+
+                <!-- Botones de autenticación Desktop -->
+                <div class="hidden md:flex items-center space-x-3 lg:space-x-4">
+                    <button
+                        class="text-gray-600 hover:text-gray-900 font-medium text-sm lg:text-base px-3 py-2 rounded-md transition-colors duration-200">
+                        Sign In
+                    </button>
+                    <button
+                        class="bg-black text-white font-medium text-sm lg:text-base px-4 lg:px-6 py-2 lg:py-2.5 rounded-md hover:bg-gray-800 transition-colors duration-200 shadow-sm">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Botón menú móvil -->
+                <button class="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
+                    onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Menú móvil -->
+            <div id="mobileMenu" class="hidden md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100 mt-2">
+                    <a href="#" class="block px-3 py-2 text-base font-medium text-gray-900 bg-gray-50 rounded-md">
+                        Home
+                    </a>
+                    <a href="#"
+                        class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                        Deals
+                    </a>
+                    <a href="#"
+                        class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                        Nuevas Tendencias
+                    </a>
+                    <div class="pt-3 border-t border-gray-100 space-y-2">
+                        <button
+                            class="block w-full text-left px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                            Sign In
+                        </button>
+                        <button
+                            class="block w-full bg-black text-white font-medium text-base px-3 py-2 rounded-md hover:bg-gray-800 transition-colors duration-200">
+                            Sign Up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido de ejemplo -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Bienvenido a Bensam</h2>
+            <p class="text-lg text-gray-600">Tu tienda de moda premium</p>
+        </div>
+    </main>
+
+    <script>
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+    </script>
+
+</body>
+
+</html>

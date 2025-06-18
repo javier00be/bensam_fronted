@@ -9,4 +9,9 @@ export class HeroComponent {
 
   constructor() { }
 
+  viewCollection(): void {
+    // Lógica para ver la colección
+    console.log('Ver colección clickeado');
+  }
+
 }
