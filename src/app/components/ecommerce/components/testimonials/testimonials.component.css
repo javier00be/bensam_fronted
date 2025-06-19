@@ -1,0 +1,89 @@
+/* src/app/testimonials/testimonials.component.css */
+
+/* Animación personalizada para el indicador de progreso */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 5s linear infinite;
+}
+
+/* Mejoras adicionales para la transición */
+.testimonial-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de desvanecimiento suave */
+.fade-transition {
+  transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+}
+
+/* Hover effects para los botones de navegación */
+.nav-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-button:hover {
+  transform: scale(1.05);
+}
+
+/* Indicadores de progreso mejorados */
+.progress-indicator {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.progress-indicator:hover::before {
+  transform: translateX(100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .testimonial-text {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .testimonial-container {
+    height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .testimonial-text {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .testimonial-container {
+    height: 320px;
+  }
+
+  .nav-button {
+    padding: 0.5rem;
+  }
+
+  .nav-button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}

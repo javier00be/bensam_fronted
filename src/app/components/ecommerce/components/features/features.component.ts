@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-features',
-    imports: [
+  imports: [
     CommonModule,           // Para *ngIf
     ReactiveFormsModule     // Para [formGroup] y reactive forms
   ],
@@ -14,10 +14,26 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class FeaturesComponent {
 
   features = [
-    { icon: 'fas fa-truck', text: 'Free Shipping' },
-    { icon: 'fas fa-undo-alt', text: '30 Days Return' },
-    { icon: 'fas fa-exchange-alt', text: 'Free Exchange' },
-    { icon: 'fas fa-headset', text: '24/7 Support' }
+    {
+      icon: 'fas fa-star',
+      title: 'Alta Calidad',
+      description: 'Elaborado con materiales de primera'
+    },
+    {
+      icon: 'fas fa-award',
+      title: 'Protección de Garantía',
+      description: 'Más de 2 años'
+    },
+    {
+      icon: 'fas fa-box-open',
+      title: 'Envío Gratis',
+      description: 'Pedidos superiores a 300 S/.'
+    },
+    {
+      icon: 'fas fa-headset',
+      title: 'Soporte 24/7',
+      description: 'Soporte dedicado'
+    }
   ];
 
   constructor() { }

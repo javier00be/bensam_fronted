@@ -1,86 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Sale - Responsive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <!-- Layout para Desktop (sm y arriba) -->
+    <div class="hidden sm:block">
+        <div class="grid grid-cols-13 grid-rows-5 gap-1 sm:gap-2 h-[400px] sm:h-[500px] lg:h-[600px] max-w-7xl w-full mb-8">
+            <!-- Div 1: Columna izquierda (row-span-5) -->
+            <div class="row-span-5 col-span-3 flex flex-col justify-center">
+                <img
+                    alt="Man in elegant grey suit looking left"
+                    class="w-full h-full object-cover rounded-md"
+                    src="../../../../../../../assets/images/ver2.png"
+                />
+            </div>
 
-<div class="grid grid-cols-5 grid-rows-5 gap-1 sm:gap-2 h-[400px] sm:h-[500px] lg:h-[600px] mb-8 sm:mb-12 lg:mb-16">
-  
-  <!-- Div 1: Columna izquierda (row-span-5) -->
- <div class="row-span-5 flex flex-col justify-center">
-    <img alt="Man in gray suit standing sideways looking to the left, urban background"
-         class="w-full h-full object-cover rounded-md"
-         src="https://storage.googleapis.com/a1aa/image/eca0e02d-aada-47f8-6287-462f0fa52ade.jpg"/>
-  </div>
-  
-  <!-- Div 2: Imagen superior central (col-span-3, row-span-2) -->
-  <div class="col-span-3 row-span-2 rounded-md overflow-hidden">
-    <img alt="Fashion collection showcase - elegant clothing display"
-         class="w-full h-full object-cover rounded-md"
-         src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"/>
-  </div>
-  
-  <!-- Div 3: Columna derecha (row-span-5, col-start-5) -->
-  <div class="row-span-5 col-start-5 flex justify-center items-center">
-    <img alt="Man wearing sunglasses and casual clothes sitting relaxed in outdoor setting"
-         class="w-full h-full object-cover rounded-md"
-         src="https://storage.googleapis.com/a1aa/image/a01c5770-cc46-4668-8651-41066ec7e719.jpg"/>
-  </div>
-  
-  <!-- Div 4: Imagen inferior central (col-span-3, row-span-2, col-start-2, row-start-4) -->
-  <div class="col-span-3 row-span-2 col-start-2 row-start-4 rounded-md overflow-hidden">
-    <img alt="Premium fashion accessories and style collection"
-         class="w-full h-full object-cover rounded-md"
-         src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1826&q=80"/>
-  </div>
-  
-  <!-- Div 5: Sección central - SOLO TEXTO "ULTIMATE SALE" (col-span-3, col-start-2, row-start-3) -->
-  <div class="col-span-3 col-start-2 row-start-3 bg-gradient-to-br from-black via-gray-900 to-gray-800 rounded-md flex flex-col justify-center items-center text-center p-4 sm:p-6 lg:p-8">
-    <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight tracking-wide text-white">
-      ULTIMATE
-    </h2>
-    <h3 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-gray-300 leading-tight tracking-wide">
-      SALE
-    </h3>
-    <button class="mt-4 lg:mt-6 bg-pink-400 hover:bg-pink-500 text-white font-semibold px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base rounded-md transition-all duration-300 transform hover:scale-105" 
-            (click)="viewCollection()">
-      VIEW COLLECTION
-    </button>
-  </div>
-  
-</div>
+            <!-- Div 2: Imagen superior central (col-span-7, row-span-1) -->
+            <div class="col-span-7 row-span-1 rounded-md overflow-hidden">
+                <img
+                    alt="Group of four women elegantly dressed, smiling."
+                    class="w-full h-full object-cover rounded-md"
+                    src="../../../../../../../assets/images/arriba.png"
+                />
+            </div>
 
-<!-- Versión móvil responsiva -->
-<div class="block sm:hidden">
-  <div class="flex flex-col gap-3">
-    <!-- Imagen superior en móvil -->
-    <img alt="Fashion collection showcase" 
-         class="w-full h-32 object-cover rounded-md" 
-         src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"/>
-    
-    <!-- Imagen principal izquierda -->
-    <img alt="Man in gray suit" 
-         class="w-full h-40 object-cover rounded-md" 
-         src="https://storage.googleapis.com/a1aa/image/eca0e02d-aada-47f8-6287-462f0fa52ade.jpg"/>
-    
-    <!-- Texto central ULTIMATE SALE -->
-    <div class="bg-gradient-to-br from-black via-gray-900 to-gray-800 rounded-md flex flex-col justify-center items-center text-center p-6">
-      <h2 class="text-xl font-extrabold leading-tight tracking-wide text-white">ULTIMATE</h2>
-      <h3 class="text-3xl font-extrabold text-gray-300 leading-tight tracking-wide">SALE</h3>
-      <button class="mt-4 bg-pink-400 hover:bg-pink-500 text-white font-semibold px-5 py-2 text-sm rounded-md transition-all duration-300"
-              (click)="viewCollection()">
-        VIEW COLLECTION
-      </button>
+            <!-- Div 3: Columna derecha (row-span-5, col-start-11) -->
+            <div class="row-span-5 col-span-3 col-start-11 flex justify-center items-center">
+                <img
+                    alt="Man wearing sunglasses and casual clothes sitting relaxed outdoors"
+                    class="w-full h-full object-cover rounded-md"
+                    src="../../../../../../../assets/images/ver1.png"
+                />
+            </div>
+
+            <!-- Div 4: Sección central - SOLO TEXTO "ULTIMATE SALE" -->
+            <div class="col-span-7 col-start-4 row-start-2 row-span-3 bg-white rounded-md flex flex-col justify-center items-center text-center p-4 sm:p-6 lg:p-8">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight tracking-wide text-black mb-2">
+                    ULTIMATE
+                </h2>
+                <h3 class="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-outline leading-tight tracking-wide">
+                    SALE
+                </h3>
+                <p class="text-sm sm:text-base lg:text-lg text-gray-700 mt-4">
+                    NUEVA COLECCIÓN
+                </p>
+                <button class="mt-6 lg:mt-8 bg-black hover:bg-gray-800 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg" onclick="alert('¡Has hecho clic en Ver Colección!')">
+                    Comprar
+                </button>
+            </div>
+
+            <!-- Div 5: Imagen inferior central -->
+            <div class="col-span-7 row-span-1 col-start-4 row-start-5 rounded-md overflow-hidden">
+                <img
+                    alt="Two happy young women laughing"
+                    class="w-full h-full object-cover rounded-md"
+                    src="../../../../../../../assets/images/abajo.png"
+                />
+            </div>
+        </div>
     </div>
-    
-    <!-- Imagen derecha -->
-    <img alt="Man with sunglasses" 
-         class="w-full h-40 object-cover rounded-md"
-         src="https://storage.googleapis.com/a1aa/image/a01c5770-cc46-4668-8651-41066ec7e719.jpg"/>
-    
-    <!-- Imagen inferior -->
-    <img alt="Premium fashion accessories" 
-         class="w-full h-32 object-cover rounded-md"
-         src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"/>
-    
-    <!-- Imagen pequeña inferior -->
-    <img alt="Three women" 
-         class="w-full h-24 object-cover rounded-md"
-         src="https://storage.googleapis.com/a1aa/image/ab9a0fb8-53a3-4867-10b4-f3dcd63b2478.jpg"/>
-  </div>
-</div>
+
+    <!-- Layout para Móviles (menos de sm) -->
+    <div class="block sm:hidden">
+        <div class="flex flex-col gap-4 max-w-sm mx-auto">
+            <!-- Imagen superior -->
+            <div class="w-full h-32 rounded-md overflow-hidden">
+                <img
+                    alt="Group of four women elegantly dressed, smiling."
+                    class="w-full h-full object-cover"
+                    src="../../../../../../../assets/images/arriba.png"
+                />
+            </div>
+
+            <!-- Sección central con texto principal -->
+            <div class="bg-white rounded-md p-6 text-center shadow-lg">
+                <h2 class="text-3xl font-extrabold leading-tight tracking-wide text-black mb-1">
+                    ULTIMATE
+                </h2>
+                <h3 class="text-4xl font-extrabold text-outline leading-tight tracking-wide mb-3">
+                    SALE
+                </h3>
+                <p class="text-sm text-gray-700 mb-4">
+                    NUEVA COLECCIÓN
+                </p>
+                <button class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-6 text-sm rounded-md transition-all duration-300 shadow-lg" onclick="alert('¡Has hecho clic en Ver Colección!')">
+                    Comprar
+                </button>
+            </div>
+
+            <!-- Grid de 2 columnas para las imágenes laterales -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="aspect-[3/4] rounded-md overflow-hidden">
+                    <img
+                        alt="Man in elegant grey suit looking left"
+                        class="w-full h-full object-cover"
+                        src="../../../../../../../assets/images/ver2.png"
+                    />
+                </div>
+                <div class="aspect-[3/4] rounded-md overflow-hidden">
+                    <img
+                        alt="Man wearing sunglasses and casual clothes sitting relaxed outdoors"
+                        class="w-full h-full object-cover"
+                        src="../../../../../../../assets/images/ver1.png"
+                    />
+                </div>
+            </div>
+
+            <!-- Imagen inferior -->
+            <div class="w-full h-32 rounded-md overflow-hidden">
+                <img
+                    alt="Two happy young women laughing"
+                    class="w-full h-full object-cover"
+                    src="../../../../../../../assets/images/abajo.png"
+                />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

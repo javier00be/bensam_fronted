@@ -1,50 +1,229 @@
-<div class="mb-20 max-w-5xl mx-auto">
-  <h3 class="text-xl font-semibold mb-2">
-    Descuentos del Mes
-  </h3>
-  <p class="text-gray-600 mb-6">
-    Aprovecha el tiempo disponible
-  </p>
-  <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
-    <div class="flex flex-col items-center md:items-start space-y-4">
-      <button (click)="onComprarClick()" class="bg-black text-white font-semibold px-6 py-2 rounded-md mb-4">
-        Comprar
+<!-- monthly-discounts.component.html -->
+<div class="mb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
+  <div class="flex flex-col xl:flex-row justify-between items-start gap-8 lg:gap-12 xl:gap-16">
+
+    <!-- Sección izquierda: Texto, Botón y Cuenta Regresiva -->
+    <div class="flex-1 flex flex-col items-center xl:items-start text-center xl:text-left w-full xl:w-auto">
+      <!-- Header -->
+      <div class="mb-6 lg:mb-8">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-3 lg:mb-4 leading-tight">
+          Descuentos del Mes
+        </h1>
+        <p class="text-gray-600 text-base sm:text-lg max-w-md lg:max-w-lg leading-relaxed mx-auto xl:mx-0">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Scelerisque duis ultrices sollicitudin aliquam sem.
+          Scelerisque duis ultrices sollicitudin.
+        </p>
+      </div>
+
+      <!-- CTA Button -->
+      <button
+        (click)="onComprarClick()"
+        class="group relative bg-black text-white font-semibold px-8 sm:px-10 py-3 sm:py-4 rounded-2xl mb-8 lg:mb-12
+               hover:bg-gray-800 active:bg-gray-900 transform hover:scale-105 active:scale-95
+               transition-all duration-300 ease-out shadow-xl hover:shadow-2xl
+               focus:outline-none focus:ring-4 focus:ring-gray-300 text-sm sm:text-base"
+      >
+        <span class="relative z-10">Comprar Ahora</span>
+        <div class="absolute inset-0 bg-gradient-to-r from-gray-900 to-black rounded-2xl opacity-0
+                    group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
-      <div class="flex space-x-4 text-center text-sm font-mono text-gray-700">
-        <div>
-          <div class="text-2xl font-bold">
-            {{ countdown.days.toString().padStart(2, '0') }}
-          </div>
-          <div>Días</div>
+
+      <!-- Countdown Section -->
+      <div class="w-full max-w-sm sm:max-w-md lg:max-w-lg">
+        <div class="text-center xl:text-left mb-4 lg:mb-6">
+          <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+            ¡Aprovecha! Tiempo Disponible
+          </h2>
+          <div class="w-16 h-1 bg-red-500 mx-auto xl:mx-0 rounded-full"></div>
         </div>
-        <div>
-          <div class="text-2xl font-bold">
-            {{ countdown.hours.toString().padStart(2, '0') }}
+
+        <!-- Countdown Cards -->
+        <div class="grid grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+          <!-- Days -->
+          <div class="group bg-white rounded-xl lg:rounded-2xl border-2 border-gray-100 p-2 sm:p-3 lg:p-4 text-center
+                      hover:border-gray-300 hover:shadow-lg transform hover:-translate-y-1
+                      transition-all duration-300">
+            <div class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 font-mono mb-1
+                        group-hover:text-red-500 transition-colors">
+              {{ formattedDays }}
+            </div>
+            <div class="text-xs sm:text-sm text-gray-600 font-medium uppercase tracking-wide">Días</div>
           </div>
-          <div>Horas</div>
-        </div>
-        <div>
-          <div class="text-2xl font-bold">
-            {{ countdown.minutes.toString().padStart(2, '0') }}
+
+          <!-- Hours -->
+          <div class="group bg-white rounded-xl lg:rounded-2xl border-2 border-gray-100 p-2 sm:p-3 lg:p-4 text-center
+                      hover:border-gray-300 hover:shadow-lg transform hover:-translate-y-1
+                      transition-all duration-300 delay-75">
+            <div class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 font-mono mb-1
+                        group-hover:text-red-500 transition-colors">
+              {{ formattedHours }}
+            </div>
+            <div class="text-xs sm:text-sm text-gray-600 font-medium uppercase tracking-wide">Horas</div>
           </div>
-          <div>Minutos</div>
-        </div>
-        <div>
-          <div class="text-2xl font-bold">
-            {{ countdown.seconds.toString().padStart(2, '0') }}
+
+          <!-- Minutes -->
+          <div class="group bg-white rounded-xl lg:rounded-2xl border-2 border-gray-100 p-2 sm:p-3 lg:p-4 text-center
+                      hover:border-gray-300 hover:shadow-lg transform hover:-translate-y-1
+                      transition-all duration-300 delay-150">
+            <div class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 font-mono mb-1
+                        group-hover:text-red-500 transition-colors">
+              {{ formattedMinutes }}
+            </div>
+            <div class="text-xs sm:text-sm text-gray-600 font-medium uppercase tracking-wide">Min</div>
           </div>
-          <div>Segundos</div>
+
+          <!-- Seconds -->
+          <div class="group bg-white rounded-xl lg:rounded-2xl border-2 border-gray-100 p-2 sm:p-3 lg:p-4 text-center
+                      hover:border-gray-300 hover:shadow-lg transform hover:-translate-y-1
+                      transition-all duration-300 delay-225">
+            <div class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 font-mono mb-1
+                        group-hover:text-red-500 transition-colors">
+              {{ formattedSeconds }}
+            </div>
+            <div class="text-xs sm:text-sm text-gray-600 font-medium uppercase tracking-wide">Seg</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="relative w-full max-w-xs md:max-w-sm">
-      <img alt="Man in blue suit posing with hand in pocket, white background"
-           class="rounded-md w-full object-cover"
-           height="450"
-           src="https://storage.googleapis.com/a1aa/image/ed603a48-c8ec-4d41-26a3-406c4f040c64.jpg"
-           width="300"/>
-      <div class="absolute bottom-0 left-0 bg-white bg-opacity-90 w-full p-3 rounded-b-md text-sm font-semibold">
-        50% OFF
+
+    <!-- Sección derecha: Carrusel de productos -->
+    <div class="flex-1 relative w-full flex flex-col items-center justify-center">
+      <!-- Carousel Controls Header -->
+      <div class="flex justify-between items-center w-full max-w-sm sm:max-w-md lg:max-w-2xl mb-3 sm:mb-4">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-800">Productos en Oferta</h3>
+        <button
+          (click)="toggleAutoSlide()"
+          class="text-xs sm:text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200
+                 px-2 sm:px-3 py-1 rounded-lg hover:bg-gray-100"
+        >
+          {{ isAutoSliding ? 'Pausar' : 'Reproducir' }} auto-slide
+        </button>
+      </div>
+
+      <!-- Carousel Container -->
+      <div
+        class="relative w-full max-w-sm sm:max-w-md lg:max-w-2xl overflow-hidden rounded-2xl sm:rounded-3xl
+               bg-gradient-to-br from-gray-50 to-gray-100 shadow-xl sm:shadow-2xl"
+        (mouseenter)="onCarouselMouseEnter()"
+        (mouseleave)="onCarouselMouseLeave()"
+      >
+        <!-- Products Container -->
+        <div
+          #carouselContainer
+          class="flex flex-nowrap gap-3 sm:gap-4 lg:gap-6 p-3 sm:p-4 lg:p-6 transition-transform duration-500 ease-out cursor-grab active:cursor-grabbing"
+          [style.transform]="'translateX(' + (-currentIndex * (singleCardWidth + cardGap)) + 'px)'"
+        >
+          <!-- Product Cards -->
+          <div
+            *ngFor="let product of products; let i = index"
+            class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden
+                   hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300
+                   border border-gray-200"
+          >
+            <!-- Product Image -->
+            <div class="relative overflow-hidden">
+              <img
+                [src]="product.src"
+                [alt]="product.alt"
+                class="w-full h-48 sm:h-56 lg:h-64 object-cover hover:scale-110 transition-transform duration-500"
+                (error)="productImageError(product, $event)"
+              />
+
+              <!-- Discount Badge -->
+              <div class="absolute top-3 sm:top-4 left-3 sm:left-4 bg-red-500 text-white px-2 sm:px-3 py-1 sm:py-2 rounded-lg sm:rounded-xl
+                          font-bold text-sm sm:text-base lg:text-lg shadow-lg animate-pulse">
+                {{ product.discount }}% OFF
+              </div>
+
+              <!-- Category Badge -->
+              <div class="absolute top-3 sm:top-4 right-3 sm:right-4 bg-black bg-opacity-70 text-white px-2 sm:px-3 py-1
+                          rounded-md sm:rounded-lg text-xs sm:text-sm font-medium backdrop-blur-sm">
+                {{ product.category }}
+              </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="p-4 sm:p-5 lg:p-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs sm:text-sm text-gray-500 font-medium">
+                  {{ (i + 1).toString().padStart(2, '0') }} — Promoción
+                </span>
+              </div>
+
+              <h4 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+                {{ product.title }}
+              </h4>
+
+              <div class="flex items-center justify-between">
+                <div class="text-xl sm:text-2xl font-bold text-red-600">
+                  {{ product.price }}
+                </div>
+                <button class="bg-gray-900 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium
+                               hover:bg-gray-800 transition-colors duration-200">
+                  Ver Detalles
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Arrows - Solo visible en tablet y desktop -->
+      <button
+        (click)="prevProduct()"
+        class="hidden sm:block absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 z-20
+               bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300
+               rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl
+               transform hover:scale-110 active:scale-95 transition-all duration-200
+               focus:outline-none focus:ring-4 focus:ring-gray-200"
+        [disabled]="isDragging"
+      >
+        <svg class="w-4 h-4 lg:w-6 lg:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <button
+        (click)="nextProduct()"
+        class="hidden sm:block absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 z-20
+               bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300
+               rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl
+               transform hover:scale-110 active:scale-95 transition-all duration-200
+               focus:outline-none focus:ring-4 focus:ring-gray-200"
+        [disabled]="isDragging"
+      >
+        <svg class="w-4 h-4 lg:w-6 lg:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <!-- Pagination Indicators -->
+      <div class="flex justify-center mt-6 sm:mt-8 space-x-2 sm:space-x-3">
+        <button
+          *ngFor="let product of products; let i = index"
+          (click)="goToProduct(i)"
+          class="transition-all duration-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+          [class.w-6]="i === currentIndex"
+          [class.w-8]="i === currentIndex && window.innerWidth >= 640"
+          [class.w-2]="i !== currentIndex"
+          [class.w-3]="i !== currentIndex && window.innerWidth >= 640"
+          [class.h-2]="window.innerWidth < 640"
+          [class.h-3]="window.innerWidth >= 640"
+          [class.bg-gray-800]="i === currentIndex"
+          [class.bg-gray-300]="i !== currentIndex"
+          [class.hover:bg-gray-600]="i !== currentIndex"
+          [attr.aria-label]="'Ir al producto ' + (i + 1)"
+        ></button>
+      </div>
+
+      <!-- Current Product Info Display -->
+      <div class="mt-4 sm:mt-6 text-center">
+        <p class="text-gray-600 text-xs sm:text-sm">
+          {{ currentIndex + 1 }} de {{ products.length }} productos
+        </p>
+        <h4 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 mt-1">
+          {{ currentProduct.title }}
+        </h4>
       </div>
     </div>
   </div>

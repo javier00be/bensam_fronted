@@ -1,6 +1,29 @@
-<div class="flex flex-col sm:flex-row justify-between items-center text-gray-600 text-xs sm:text-sm border-t border-b border-gray-200 py-6 mb-16">
-  <div *ngFor="let feature of features" class="flex items-center space-x-3 mb-4 sm:mb-0">
-    <i [class]="feature.icon + ' text-lg'"></i>
-    <span>{{ feature.text }}</span>
+<!-- Versión mejorada con mejor responsive design -->
+<div class="border-t border-b border-gray-200 py-8 mb-16 bg-gradient-to-r from-gray-50 to-white">
+  <div class="container mx-auto px-4">
+    <!-- Grid responsive: 1 columna en móvil, 2 en tablet, 3-4 en desktop -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+      <div
+        *ngFor="let feature of features"
+        class="flex items-start space-x-4 p-4 rounded-lg hover:bg-white hover:shadow-md transition-all duration-300 group"
+      >
+        <!-- Icono con mejor diseño -->
+        <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-500 transition-colors duration-300">
+          <i [class]="feature.icon + ' text-blue-600 group-hover:text-white text-xl transition-colors duration-300'"></i>
+        </div>
+
+        <!-- Contenido del texto -->
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-gray-900 text-sm lg:text-base mb-1 leading-tight">
+            {{ feature.title }}
+          </h3>
+          <p class="text-xs lg:text-sm text-gray-600 leading-relaxed">
+            {{ feature.description }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+
