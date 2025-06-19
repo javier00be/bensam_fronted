@@ -1,1 +1,122 @@
-<p>tienda works!</p>
+<app-announcement-bar></app-announcement-bar>
+<app-header></app-header>
+<div class="container mx-auto px-4 py-8">
+  <div class="grid grid-cols-4 gap-8">
+    <div class="col-span-1">
+      <!-- Sidebar Filters -->
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold mb-2">Marca</h3>
+        <select class="w-full border rounded py-2 px-3">
+          <option>John Holden</option>
+          <option>Donatelli</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold mb-2">Entalle</h3>
+        <select class="w-full border rounded py-2 px-3">
+          <option>Regular Fit</option>
+          <option>Slim Fit</option>
+          <option>Modern Fit</option>
+          <option>Ultra Slim Fit</option>
+          <option>Classic Fit</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold mb-2">Color</h3>
+        <select class="w-full border rounded py-2 px-3">
+          <option>Gris</option>
+          <option>Marron</option>
+          <option>Negro</option>
+          <option>Azul</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold mb-2">Tallas</h3>
+        <select class="w-full border rounded py-2 px-3">
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+          <option>XL</option>
+        </select>
+      </div>
+      <!-- Description -->
+      <div>
+        <h2 class="text-2xl font-semibold mb-4">Ternos para Hombre:</h2>
+        <p class="text-gray-700">
+          Los ternos son considerados por muchos como la armadura principal de todo un caballero en ocasiones formales y es el uniforme por excelencia por la cual se valdrá para poder asistir a diferentes eventos y poder salir airoso. Por ello, las marcas de Jhon Holden y Donatelli ofrecen diferentes colores, texturas y tipos de ternos con diversos entalles como Regular fit, Modern fit, Slim fit, Ultra Slim fit para que puedas elegir el que más se acomode a tu cuerpo. Así mismo, tenemos los ternos Classic fit, exclusivos para niños. Ahora no tienes excusas para lucir Impecable y al mejor estilo de las nuevas tendencias en la moda del buen vestir. Elige el modelo que más se acomode a lo que buscas y arma un outfit perfecto para ti.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-span-3">
+      <!-- Sorting and Product Grid -->
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <label class="mr-2" for="sort">Ordenar por:</label>
+          <select class="border rounded py-1 px-2" id="sort">
+            <option>Mas vendidos</option>
+          </select>
+        </div>
+        <div>
+          <!-- Pagination -->
+          <a class="text-blue-500 hover:underline" href="#">1</a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Product Card 1 -->
+        <div class="border rounded p-4">
+          <img alt="Terno" class="w-full h-64 object-cover mb-2" src="src/assets/images/portada.jpg" />
+          <h3 class="text-lg font-semibold">Terno Saul Gris Claro</h3>
+          <p class="text-gray-600">John Holden</p>
+          <p class="text-red-500">
+            S/ 329.90
+            <span class="text-gray-400 line-through">S/ 829.00</span>
+          </p>
+          <p class="text-green-500">62% DSCTO</p>
+          <button class="bg-red-500 text-white py-2 px-4 rounded mt-2">S/ 313.40 DSCTO ADICIONAL</button>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="border rounded p-4">
+          <img alt="Terno" class="w-full h-64 object-cover mb-2" src="src/assets/images/portada.jpg" />
+          <h3 class="text-lg font-semibold">Terno Franz Marron</h3>
+          <p class="text-gray-600">John Holden</p>
+          <p class="text-red-500">
+            S/ 329.90
+            <span class="text-gray-400 line-through">S/ 819.00</span>
+          </p>
+          <p class="text-green-500">62% DSCTO</p>
+          <button class="bg-red-500 text-white py-2 px-4 rounded mt-2">S/ 313.40 DSCTO ADICIONAL</button>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="border rounded p-4">
+          <img alt="Terno" class="w-full h-64 object-cover mb-2" src="src/assets/images/portada.jpg" />
+          <h3 class="text-lg font-semibold">Terno Charles Minimate Negro</h3>
+          <p class="text-gray-600">Donatelli</p>
+          <p class="text-red-500">
+            S/ 299.90
+            <span class="text-gray-400 line-through">S/ 439.00</span>
+          </p>
+          <p class="text-green-500">35% DSCTO</p>
+          <button class="bg-red-500 text-white py-2 px-4 rounded mt-2">S/ 284.90 DSCTO ADICIONAL</button>
+        </div>
+
+        <!-- Product Card 4 -->
+        <div class="border rounded p-4">
+          <img alt="Terno" class="w-full h-64 object-cover mb-2" src="src/assets/images/portada.jpg" />
+          <h3 class="text-lg font-semibold">Terno Charles Minimate Azul Marino</h3>
+          <p class="text-gray-600">Donatelli</p>
+          <p class="text-red-500">
+            S/ 299.90
+            <span class="text-gray-400 line-through">S/ 439.00</span>
+          </p>
+          <p class="text-green-500">35% DSCTO</p>
+          <button class="bg-red-500 text-white py-2 px-4 rounded mt-2">S/ 284.90 DSCTO ADICIONAL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

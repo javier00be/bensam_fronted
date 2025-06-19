@@ -11,6 +11,10 @@ const routes: Routes = [
     path: 'home',
     loadComponent: () => import('../ecommerce/home/home.component').then(m => m.HomeComponent)
   },
+  {
+    path: 'tienda',
+    loadComponent: () => import('./tienda/tienda.component').then(m => m.TiendaComponent)
+  },
 ];
 
 @NgModule({

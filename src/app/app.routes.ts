@@ -15,10 +15,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   {
     path: 'ecommerce',
-    loadComponent: () =>
-      import('../app/components/ecommerce/home/home.component').then(
-        (m) => m.HomeComponent
-      ),
+    loadChildren: () => import('./components/ecommerce/ecommerce.module').then(m => m.EcommerceModule)
   },
   {
     path: 'admin',
