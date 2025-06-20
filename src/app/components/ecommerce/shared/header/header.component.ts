@@ -49,4 +49,10 @@ export class HeaderComponent implements OnInit {
   toggleFormalMobileSubMenu(): void {
     this.isFormalMobileSubMenuOpen = !this.isFormalMobileSubMenuOpen;
   }
+
+  isProfileMenuOpen: boolean = false;
+
+  toggleProfileMenu(): void {
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
 }

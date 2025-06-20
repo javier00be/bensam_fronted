@@ -8,9 +8,10 @@
                 <div class="flex md:hidden items-center justify-between gap-3">
                     <!-- Hamburger Menu -->
                     <button class="p-2 text-gray-700 hover:text-red-500 transition-colors duration-200"
-                            (click)="toggleMobileMenu()">
+                        (click)="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
 
@@ -22,11 +23,15 @@
                     <!-- Cart Icon (Mobile) -->
                     <button class="group relative p-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div class="relative">
-                            <svg class="w-6 h-6 text-gray-600 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            <svg class="w-6 h-6 text-gray-600 group-hover:text-red-500" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
                             </svg>
                             <!-- Cart badge -->
-                            <span *ngIf="cartItemCount > 0" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                            <span *ngIf="cartItemCount > 0"
+                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
                                 {{ cartItemCount }}
                             </span>
                         </div>
@@ -38,14 +43,13 @@
                     <!-- Search Bar (Left) -->
                     <div class="relative flex-1 max-w-sm">
                         <div class="relative">
-                            <input
-                                type="text"
-                                placeholder="Buscar productos..."
-                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm"
-                            />
+                            <input type="text" placeholder="Buscar productos..."
+                                class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm" />
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                             </div>
                         </div>
@@ -59,27 +63,56 @@
                     <!-- User & Cart Icons (Right) -->
                     <div class="flex items-center space-x-4 flex-1 justify-end">
                         <!-- User Account -->
-                        <button class="group flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                            <div class="p-2 bg-gray-100 rounded-full group-hover:bg-red-100 transition-colors duration-200">
-                                <svg class="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
+                        <div class="relative">
+                            <button (click)="toggleProfileMenu()"
+                                class="group flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                <div
+                                    class="p-2 bg-gray-100 rounded-full group-hover:bg-red-100 transition-colors duration-200">
+                                    <svg class="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <span
+                                    class="hidden lg:block text-sm font-medium text-gray-700 group-hover:text-red-500">Cuenta</span>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div *ngIf="isProfileMenuOpen"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg origin-top-right focus:outline-none z-500"
+                                role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                <div class="py-1" role="none">
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500"
+                                        role="menuitem" tabindex="-1" id="menu-item-0">Iniciar Sesión</a>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500"
+                                        role="menuitem" tabindex="-1" id="menu-item-1">Registrarse</a>
+                                </div>
                             </div>
-                            <span class="hidden lg:block text-sm font-medium text-gray-700 group-hover:text-red-500">Cuenta</span>
-                        </button>
+                        </div>
 
                         <!-- Shopping Cart -->
-                        <button class="group relative flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-                            <div class="relative p-2 bg-gray-100 rounded-full group-hover:bg-red-100 transition-colors duration-200">
-                                <svg class="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        <button
+                            class="group relative flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                            <div
+                                class="relative p-2 bg-gray-100 rounded-full group-hover:bg-red-100 transition-colors duration-200">
+                                <svg class="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
                                 </svg>
                                 <!-- Cart badge -->
-                                <span *ngIf="cartItemCount > 0" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                                <span *ngIf="cartItemCount > 0"
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
                                     {{ cartItemCount }}
                                 </span>
                             </div>
-                            <span class="hidden lg:block text-sm font-medium text-gray-700 group-hover:text-red-500">Carrito</span>
+                            <span
+                                class="hidden lg:block text-sm font-medium text-gray-700 group-hover:text-red-500">Carrito</span>
                         </button>
                     </div>
                 </div>
@@ -87,14 +120,12 @@
                 <!-- Mobile Search Bar (Below mobile header) -->
                 <div class="md:hidden mt-3">
                     <div class="relative">
-                        <input
-                            type="text"
-                            placeholder="Buscar productos..."
-                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm"
-                        />
+                        <input type="text" placeholder="Buscar productos..."
+                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm" />
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
                     </div>
@@ -108,31 +139,29 @@
                 <div class="flex justify-center items-center relative">
                     <!-- Desktop Navigation -->
                     <ul class="flex items-center space-x-1">
-                        <li class="relative"
-                            (mouseenter)="showSubMenu = true"
-                            (mouseleave)="showSubMenu = false">
+                        <li class="relative" (mouseenter)="showSubMenu = true" (mouseleave)="showSubMenu = false">
                             <a href="#"
-                               class="flex items-center px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
-                               [class.text-red-500]="activeCategory === 'formal'"
-                               [class.border-red-500]="activeCategory === 'formal'"
-                               [class.text-gray-700]="activeCategory !== 'formal'"
-                               [class.hover:text-red-500]="activeCategory !== 'formal'"
-                               [class.hover:border-red-500]="activeCategory !== 'formal'"
-                               (click)="setActiveCategory('formal')">
+                                class="flex items-center px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
+                                [class.text-red-500]="activeCategory === 'formal'"
+                                [class.border-red-500]="activeCategory === 'formal'"
+                                [class.text-gray-700]="activeCategory !== 'formal'"
+                                [class.hover:text-red-500]="activeCategory !== 'formal'"
+                                [class.hover:border-red-500]="activeCategory !== 'formal'"
+                                (click)="setActiveCategory('formal')">
                                 FORMAL
                                 <svg class="w-4 h-4 ml-1 transition-transform duration-200"
-                                     [class.rotate-180]="showSubMenu"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    [class.rotate-180]="showSubMenu" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </a>
                             <!-- Dropdown Menu -->
                             <div *ngIf="showSubMenu"
-                                 class="absolute top-full left-0 mt-0 w-64 bg-white shadow-xl rounded-lg border border-gray-100 z-50 transform transition-all duration-300">
+                                class="absolute top-full left-0 mt-0 w-64 bg-white shadow-xl rounded-lg border border-gray-100 z-50 transform transition-all duration-300">
                                 <div class="py-3">
-                                    <a *ngFor="let item of formalSubCategories"
-                                       href="#"
-                                       class="block px-6 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
+                                    <a *ngFor="let item of formalSubCategories" href="#"
+                                        class="block px-6 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
                                         {{ item }}
                                     </a>
                                 </div>
@@ -141,62 +170,62 @@
 
                         <li>
                             <a href="#"
-                               class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
-                               [class.text-red-500]="activeCategory === 'casual'"
-                               [class.border-red-500]="activeCategory === 'casual'"
-                               [class.text-gray-700]="activeCategory !== 'casual'"
-                               [class.hover:text-red-500]="activeCategory !== 'casual'"
-                               [class.hover:border-red-500]="activeCategory !== 'casual'"
-                               (click)="setActiveCategory('casual')">
+                                class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
+                                [class.text-red-500]="activeCategory === 'casual'"
+                                [class.border-red-500]="activeCategory === 'casual'"
+                                [class.text-gray-700]="activeCategory !== 'casual'"
+                                [class.hover:text-red-500]="activeCategory !== 'casual'"
+                                [class.hover:border-red-500]="activeCategory !== 'casual'"
+                                (click)="setActiveCategory('casual')">
                                 CASUAL
                             </a>
                         </li>
 
                         <li>
                             <a href="#"
-                               class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
-                               [class.text-red-500]="activeCategory === 'ropa-interior'"
-                               [class.border-red-500]="activeCategory === 'ropa-interior'"
-                               [class.text-gray-700]="activeCategory !== 'ropa-interior'"
-                               [class.hover:text-red-500]="activeCategory !== 'ropa-interior'"
-                               [class.hover:border-red-500]="activeCategory !== 'ropa-interior'"
-                               (click)="setActiveCategory('ropa-interior')">
+                                class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
+                                [class.text-red-500]="activeCategory === 'ropa-interior'"
+                                [class.border-red-500]="activeCategory === 'ropa-interior'"
+                                [class.text-gray-700]="activeCategory !== 'ropa-interior'"
+                                [class.hover:text-red-500]="activeCategory !== 'ropa-interior'"
+                                [class.hover:border-red-500]="activeCategory !== 'ropa-interior'"
+                                (click)="setActiveCategory('ropa-interior')">
                                 ROPA INTERIOR
                             </a>
                         </li>
 
                         <li>
                             <a href="#"
-                               class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
-                               [class.text-red-500]="activeCategory === 'todo-calzado'"
-                               [class.border-red-500]="activeCategory === 'todo-calzado'"
-                               [class.text-gray-700]="activeCategory !== 'todo-calzado'"
-                               [class.hover:text-red-500]="activeCategory !== 'todo-calzado'"
-                               [class.hover:border-red-500]="activeCategory !== 'todo-calzado'"
-                               (click)="setActiveCategory('todo-calzado')">
+                                class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
+                                [class.text-red-500]="activeCategory === 'todo-calzado'"
+                                [class.border-red-500]="activeCategory === 'todo-calzado'"
+                                [class.text-gray-700]="activeCategory !== 'todo-calzado'"
+                                [class.hover:text-red-500]="activeCategory !== 'todo-calzado'"
+                                [class.hover:border-red-500]="activeCategory !== 'todo-calzado'"
+                                (click)="setActiveCategory('todo-calzado')">
                                 TODO CALZADO
                             </a>
                         </li>
 
                         <li>
                             <a href="#"
-                               class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
-                               [class.text-red-500]="activeCategory === 'accesorios'"
-                               [class.border-red-500]="activeCategory === 'accesorios'"
-                               [class.text-gray-700]="activeCategory !== 'accesorios'"
-                               [class.hover:text-red-500]="activeCategory !== 'accesorios'"
-                               [class.hover:border-red-500]="activeCategory !== 'accesorios'"
-                               (click)="setActiveCategory('accesorios')">
+                                class="block px-4 py-4 text-sm font-semibold transition-colors duration-200 border-b-2 border-transparent"
+                                [class.text-red-500]="activeCategory === 'accesorios'"
+                                [class.border-red-500]="activeCategory === 'accesorios'"
+                                [class.text-gray-700]="activeCategory !== 'accesorios'"
+                                [class.hover:text-red-500]="activeCategory !== 'accesorios'"
+                                [class.hover:border-red-500]="activeCategory !== 'accesorios'"
+                                (click)="setActiveCategory('accesorios')">
                                 ACCESORIOS
                             </a>
                         </li>
 
                         <li>
                             <a href="#"
-                               class="flex items-center px-4 py-4 text-sm font-semibold text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors duration-200"
-                               [class.text-red-500]="activeCategory === 'liquidacion'"
-                               [class.border-red-500]="activeCategory === 'liquidacion'"
-                               (click)="setActiveCategory('liquidacion')">
+                                class="flex items-center px-4 py-4 text-sm font-semibold text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors duration-200"
+                                [class.text-red-500]="activeCategory === 'liquidacion'"
+                                [class.border-red-500]="activeCategory === 'liquidacion'"
+                                (click)="setActiveCategory('liquidacion')">
                                 <span class="animate-pulse">🔥</span>
                                 <span class="ml-1">LIQUIDACIÓN</span>
                             </a>
@@ -212,10 +241,13 @@
                 <ul class="space-y-1">
                     <!-- User Account (Mobile) -->
                     <li class="border-b border-gray-100 pb-3 mb-3">
-                        <button class="flex items-center w-full px-4 py-3 text-left font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+                        <button
+                            class="flex items-center w-full px-4 py-3 text-left font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200">
                             <div class="p-2 bg-gray-100 rounded-full mr-3">
-                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
                             </div>
                             Mi Cuenta
@@ -224,18 +256,19 @@
 
                     <li>
                         <button (click)="toggleFormalMobileSubMenu()"
-                                class="flex items-center justify-between w-full px-4 py-3 text-left font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200">
+                            class="flex items-center justify-between w-full px-4 py-3 text-left font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200">
                             FORMAL
                             <svg class="w-4 h-4 transition-transform duration-200"
-                                 [class.rotate-90]="isFormalMobileSubMenuOpen"
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                [class.rotate-90]="isFormalMobileSubMenuOpen" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
                             </svg>
                         </button>
-                        <div *ngIf="isFormalMobileSubMenuOpen" class="ml-4 space-y-1 mt-2 pl-4 border-l-2 border-gray-100">
-                            <a *ngFor="let item of formalSubCategories"
-                               href="#"
-                               class="block px-4 py-2 text-sm text-gray-600 hover:text-red-500 hover:bg-red-50 rounded transition-colors duration-200">
+                        <div *ngIf="isFormalMobileSubMenuOpen"
+                            class="ml-4 space-y-1 mt-2 pl-4 border-l-2 border-gray-100">
+                            <a *ngFor="let item of formalSubCategories" href="#"
+                                class="block px-4 py-2 text-sm text-gray-600 hover:text-red-500 hover:bg-red-50 rounded transition-colors duration-200">
                                 {{ item }}
                             </a>
                         </div>
@@ -243,40 +276,40 @@
 
                     <li>
                         <a href="#"
-                           class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
-                           (click)="setActiveCategory('casual')">
+                            class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
+                            (click)="setActiveCategory('casual')">
                             CASUAL
                         </a>
                     </li>
 
                     <li>
                         <a href="#"
-                           class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
-                           (click)="setActiveCategory('ropa-interior')">
+                            class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
+                            (click)="setActiveCategory('ropa-interior')">
                             ROPA INTERIOR
                         </a>
                     </li>
 
                     <li>
                         <a href="#"
-                           class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
-                           (click)="setActiveCategory('todo-calzado')">
+                            class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
+                            (click)="setActiveCategory('todo-calzado')">
                             TODO CALZADO
                         </a>
                     </li>
 
                     <li>
                         <a href="#"
-                           class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
-                           (click)="setActiveCategory('accesorios')">
+                            class="block px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-500 rounded-lg transition-colors duration-200"
+                            (click)="setActiveCategory('accesorios')">
                             ACCESORIOS
                         </a>
                     </li>
 
                     <li>
                         <a href="#"
-                           class="flex items-center px-4 py-3 font-semibold text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors duration-200"
-                           (click)="setActiveCategory('liquidacion')">
+                            class="flex items-center px-4 py-3 font-semibold text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors duration-200"
+                            (click)="setActiveCategory('liquidacion')">
                             <span class="animate-pulse">🔥</span>
                             <span class="ml-2">LIQUIDACIÓN</span>
                         </a>
